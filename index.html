@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Botoscope – Fotóportfólió</title>
+
+  <!-- Favicon (colored logo) -->
+  <link rel="icon" href="images/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="apple-touch-icon" href="images/favicon.png">
+  <meta id="metaTheme" name="theme-color" content="#0a0a0f">
+
+  <!-- Set theme before paint (no flash of wrong theme) -->
+  <script>
+    (function () {
+      try {
+        var k = 'botoscope-theme', s = localStorage.getItem(k);
+        var t = s || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Flatpickr (date picker) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─── Tokens ─────────────────────────────────────────── */
+    :root {
+      color-scheme: dark;
+      --bg:          #0e0e0e;
+      --bg2:         #161616;
+      --blue:        #4a6b8a;
+      --blue-l:      #6a8fad;
+      --brown:       #7a5230;
+      --cream:       #ede0c4;          /* body text */
+      --cream-d:     rgba(237,224,196,.55);
+      --white:       #f5f5f5;          /* headings */
+      --muted:       rgba(237,224,196,.28);
+
+      /* surfaces / lines */
+      --line:        rgba(237,224,196,.10);
+      --line-strong: rgba(237,224,196,.20);
+      --card-bg:     rgba(20,22,26,.55);
+      --nav-bg:      rgba(14,14,14,.92);
+      --band:        rgba(22,22,22,.62);
+      --footer-bg:   #080808;
+
+      /* animated background */
+      --hero-fade:   #0a0a0f;          /* hero bottom melts into this */
+      --canvas-bg:   #0a0a0f;          /* starfield base colour */
+      --canvas-fade: 10,10,15;         /* trail-fade rgb */
+      --star:        237,224,196;      /* star rgb */
+      --neb1:        rgba(74,107,138,.20);
+      --neb2:        rgba(122,82,48,.15);
+      --vignette:    rgba(5,5,8,.75);
+
+      --nav-h:       68px;
+      --serif:       'Cormorant Garamond', Georgia, serif;
+      --sans:        'Inter', system-ui, sans-serif;
+      --ease:        0.35s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ─── Light theme overrides ─────────────────────────── */
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg:          #f4f0e8;
+      --bg2:         #e9e3d6;
+      --blue:        #3c5d82;
+      --blue-l:      #4a6b8a;
+      --brown:       #7a5230;
+      --cream:       #2c2823;          /* body text (dark) */
+      --cream-d:     rgba(44,40,35,.62);
+      --white:       #1d1a16;          /* headings (near-black) */
+      --muted:       rgba(44,40,35,.42);
+
+      --line:        rgba(44,40,35,.14);
+      --line-strong: rgba(44,40,35,.26);
+      --card-bg:     rgba(255,255,255,.55);
+      --nav-bg:      rgba(244,240,232,.9);
+      --band:        rgba(255,255,255,.5);
+      --footer-bg:   #e7e0d2;
+
+      --hero-fade:   #efe9dd;
+      --canvas-bg:   #f4f0e8;
+      --canvas-fade: 244,240,232;
+      --star:        120,96,62;        /* warm dust on light */
+      --neb1:        rgba(74,107,138,.14);
+      --neb2:        rgba(122,82,48,.10);
+      --vignette:    rgba(150,135,110,.30);
+    }
+
+    /* ─── Reset ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    html  { scroll-behavior:smooth; }
+    body  {
+      color:var(--cream); font-family:var(--sans); font-weight:300; line-height:1.65; overflow-x:hidden;
+      background:var(--canvas-bg);
+      transition:color .45s ease;
+    }
+    /* Animated starfield canvas (lives behind all content) */
+    #bgCanvas {
+      position:fixed; inset:0; width:100%; height:100%;
+      z-index:-2; pointer-events:none; display:block;
+    }
+    /* Brand-tinted nebula glow + vignette, layered over the canvas */
+    .bg-nebula {
+      position:fixed; inset:0; z-index:-1; pointer-events:none;
+      transition:background .45s ease;
+      background:
+        radial-gradient(60% 55% at 22% 28%, var(--neb1), transparent 55%),
+        radial-gradient(55% 50% at 80% 68%, var(--neb2), transparent 55%),
+        radial-gradient(120% 120% at 50% 50%, transparent 52%, var(--vignette) 100%);
+    }
+    /* Subtle film grain over the whole page */
+    body::after {
+      content:''; position:fixed; inset:0; z-index:9999; pointer-events:none; opacity:.045;
+      mix-blend-mode:soft-light;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    img   { display:block; width:100%; object-fit:cover; }
+    a     { color:inherit; text-decoration:none; }
+
+    /* ─── Helpers ────────────────────────────────────────── */
+    .container { max-width:1160px; margin:0 auto; padding:0 24px; }
+    section    { padding:100px 0; }
+
+    .sec-eyebrow {
+      text-align:center; font-size:.72rem; letter-spacing:.18em;
+      text-transform:uppercase; color:var(--cream-d); margin-bottom:10px;
+    }
+    .sec-title {
+      font-family:var(--serif); font-size:clamp(2rem,5vw,3.4rem); font-weight:300;
+      letter-spacing:.06em; text-align:center; color:var(--white); margin-bottom:52px;
+    }
+
+    .btn {
+      display:inline-block; padding:13px 34px;
+      font-family:var(--sans); font-size:.76rem; letter-spacing:.16em; text-transform:uppercase;
+      border:1px solid; cursor:pointer; transition:var(--ease);
+    }
+    .btn-primary  { background:var(--blue);  border-color:var(--blue);      color:var(--white); }
+    .btn-primary:hover { background:var(--blue-l); border-color:var(--blue-l); }
+    .btn-outline  { background:transparent; border-color:var(--cream-d);    color:var(--cream); }
+    .btn-outline:hover { border-color:var(--cream); color:var(--white); }
+
+    /* ─── Fade-in observer ───────────────────────────────── */
+    .fi { opacity:0; transform:translateY(28px); transition:opacity .75s ease, transform .75s ease; }
+    .fi.in { opacity:1; transform:none; }
+
+    /* ─── Section divider ────────────────────────────────── */
+    .divider {
+      display:flex; align-items:center; justify-content:center; gap:18px;
+      padding:0 24px; position:relative; z-index:1;
+    }
+    .divider::before, .divider::after {
+      content:''; height:1px; width:min(32vw,300px);
+    }
+    .divider::before { background:linear-gradient(90deg, transparent, var(--line-strong)); }
+    .divider::after  { background:linear-gradient(90deg, var(--line-strong), transparent); }
+    .divider i {
+      flex:none; width:7px; height:7px; transform:rotate(45deg);
+      border:1px solid var(--blue-l);
+      box-shadow:0 0 0 4px rgba(74,107,138,.06);
+    }
+
+    /* ─── Theme toggle ───────────────────────────────────── */
+    .nav-right { margin-left:auto; display:flex; align-items:center; gap:22px; }
+    .theme-toggle {
+      flex:none; width:38px; height:38px; border-radius:50%;
+      background:none; border:1px solid var(--line);
+      display:flex; align-items:center; justify-content:center;
+      color:var(--cream-d); cursor:pointer; transition:var(--ease);
+    }
+    .theme-toggle:hover { color:var(--white); border-color:var(--blue); background:rgba(74,107,138,.08); }
+    .theme-toggle svg { width:18px; height:18px; }
+    .theme-toggle .icon-moon { display:none; }
+    [data-theme="light"] .theme-toggle .icon-sun  { display:none; }
+    [data-theme="light"] .theme-toggle .icon-moon { display:block; }
+
+    /* light mode: nav & footer logo become dark (hero logo stays white over the photo) */
+    [data-theme="light"] .nav-logo img,
+    [data-theme="light"] .f-logo img { filter:none; }
+
+    /* light mode: the hero sits on a dark photo, so keep its content light */
+    [data-theme="light"] .hero-title        { color:#f7f7f7; }
+    [data-theme="light"] .hero-tagline,
+    [data-theme="light"] .hero-scroll        { color:rgba(247,247,247,.72); }
+    [data-theme="light"] .hero-scroll::after { background:rgba(247,247,247,.72); }
+    [data-theme="light"] #hero .btn-outline  { border-color:rgba(247,247,247,.5); color:#f7f7f7; }
+    [data-theme="light"] #hero .btn-outline:hover { border-color:#fff; color:#fff; }
+
+    /* light mode: give the (un-scrolled) nav a glass bg so its dark text stays legible over the photo */
+    [data-theme="light"] #nav {
+      background:var(--nav-bg); backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--line);
+    }
+
+    /* ─────────────────────────────────────────────────────── */
+    /*  NAV                                                    */
+    /* ─────────────────────────────────────────────────────── */
+    #nav {
+      position:fixed; inset:0 0 auto 0; z-index:900;
+      height:var(--nav-h); display:flex; align-items:center;
+      padding:0 36px; transition:background var(--ease), backdrop-filter var(--ease);
+    }
+    #nav.scrolled {
+      background:var(--nav-bg);
+      backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--line);
+    }
+    .nav-logo {
+      display:flex; align-items:center; gap:11px;
+      font-family:var(--serif); font-size:1.35rem; font-weight:600;
+      letter-spacing:.09em; color:var(--white);
+    }
+    /* Logo image – place images/logo-white.png in your repo */
+    .nav-logo img {
+      width:38px; height:38px; object-fit:contain;
+      filter:brightness(0) invert(1);
+    }
+    .nav-links {
+      display:flex; list-style:none; gap:34px;
+    }
+    .nav-links a {
+      font-size:.74rem; letter-spacing:.14em; text-transform:uppercase;
+      color:var(--cream-d); transition:color var(--ease); position:relative;
+    }
+    .nav-links a::after {
+      content:''; position:absolute; bottom:-3px; left:0;
+      width:0; height:1px; background:var(--blue-l); transition:width var(--ease);
+    }
+    .nav-links a:hover { color:var(--white); }
+    .nav-links a:hover::after { width:100%; }
+
+    /* Hamburger */
+    .hamburger {
+      display:none; flex-direction:column; gap:5px;
+      cursor:pointer; padding:8px; background:none; border:none;
+    }
+    .hamburger span { display:block; width:24px; height:1.5px; background:var(--cream); transition:var(--ease); }
+    .hamburger.open span:nth-child(1) { transform:translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity:0; }
+    .hamburger.open span:nth-child(3) { transform:translateY(-6.5px) rotate(-45deg); }
+
+    #mobileMenu {
+      display:none; position:fixed;
+      top:var(--nav-h); left:0; right:0; z-index:899;
+      flex-direction:column; gap:0;
+      background:var(--nav-bg); backdrop-filter:blur(18px);
+      border-bottom:1px solid var(--line);
+    }
+    #mobileMenu.open { display:flex; }
+    #mobileMenu a {
+      padding:18px 32px; font-size:.95rem; letter-spacing:.1em;
+      text-transform:uppercase; color:var(--cream);
+      border-bottom:1px solid var(--line);
+      transition:color var(--ease), background var(--ease);
+    }
+    #mobileMenu a:hover { color:var(--blue-l); background:rgba(74,107,138,.08); }
+
+    /* ─────────────────────────────────────────────────────── */
+    /*  HERO                                                   */
+    /* ─────────────────────────────────────────────────────── */
+    #hero {
+      position:relative; height:100vh; min-height:600px;
+      display:flex; align-items:center; justify-content:center; padding:0; overflow:hidden;
+    }
+    .hero-bg {
+      position:absolute; inset:0;
+      background-position:center; background-size:cover; background-repeat:no-repeat;
+      transform:scale(1.06);
+    }
+    .hero-bg::after {
+      content:''; position:absolute; inset:0;
+      background:linear-gradient(to bottom,
+        rgba(10,10,12,.20) 0%,
+        rgba(10,10,12,.45) 45%,
+        rgba(10,10,12,.80) 80%,
+        var(--hero-fade) 100%);
+    }
+    .hero-content {
+      position:relative; z-index:1; text-align:center; padding:0 24px;
+    }
+    /* ← Replace src with images/logo-white.png (or logo-color.png if you prefer) */
+    .hero-logo {
+      width:120px; height:120px; object-fit:contain;
+      filter:brightness(0) invert(1);
+      margin:0 auto 22px;
+      animation:fadeDown .9s ease both;
+    }
+    .hero-title {
+      font-family:var(--serif); font-size:clamp(3rem,9vw,6.5rem);
+      font-weight:300; letter-spacing:.16em; color:var(--white); line-height:1.05;
+      animation:fadeDown .9s .18s ease both;
+    }
+    .hero-tagline {
+      font-size:clamp(.78rem,2vw,.95rem); letter-spacing:.26em;
+      text-transform:uppercase; color:var(--cream-d);
+      margin:18px 0 42px;
+      animation:fadeDown .9s .34s ease both;
+    }
+    .hero-cta {
+      display:inline-flex; gap:14px; flex-wrap:wrap; justify-content:center;
+      animation:fadeDown .9s .5s ease both;
+    }
+    .hero-scroll {
+      position:absolute; bottom:30px; left:50%; transform:translateX(-50%);
+      display:flex; flex-direction:column; align-items:center; gap:8px;
+      font-size:.65rem; letter-spacing:.18em; text-transform:uppercase; color:var(--cream-d);
+      animation:fadeDown .9s .9s ease both;
+    }
+    .hero-scroll::after {
+      content:''; display:block; width:1px; height:38px; background:var(--cream-d);
+      animation:pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+    @keyframes fadeDown { from{opacity:0;transform:translateY(-18px)} to{opacity:1;transform:none} }
+
+    /* ─────────────────────────────────────────────────────── */
+    /*  INTRO STATEMENT  (right after hero)                    */
+    /* ─────────────────────────────────────────────────────── */
+    #intro { padding:120px 0 0; text-align:center; }
+    .intro-mark {
+      width:42px; height:1px; background:var(--blue-l);
+      margin:0 auto 30px; position:relative;
+    }
+    .intro-mark::before, .intro-mark::after {
+      content:''; position:absolute; top:50%; width:5px; height:5px;
+      border:1px solid var(--blue-l); transform:translateY(-50%) rotate(45deg);
+    }
+    .intro-mark::before { left:-12px; }
+    .intro-mark::after  { right:-12px; }
+    .intro-statement {
+      max-width:760px; margin:0 auto;
+      font-family:var(--serif); font-weight:300;
+      font-size:clamp(1.5rem,3.4vw,2.5rem); line-height:1.4;
+      letter-spacing:.02em; color:var(--white);
+    }
+    .intro-statement em { color:var(--blue-l); font-style:italic; }
+    .intro-sub {
+      margin:26px auto 0; max-width:560px;
+      font-size:.92rem; line-height:1.85; color:var(--cream-d);
+    }
+    .value-strip {
+      display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:44px;
+    }
+    .value-pill {
+      display:flex; align-items:center; gap:9px; padding:9px 20px;
+      border:1px solid var(--line-strong); background:var(--card-bg);
+      backdrop-filter:blur(2px);
+      font-size:.72rem; letter-spacing:.13em; text-transform:uppercase; color:var(--cream-d);
+      transition:border-color var(--ease), color var(--ease);
+    }
+    .value-pill:hover { border-color:var(--blue-l); color:var(--cream); }
+    .value-pill svg { color:var(--blue-l); flex:none; }
+    .booking-notice {
+      display:flex; align-items:flex-start; gap:11px; padding:13px 18px;
+      margin-bottom:30px; border-left:2px solid var(--blue-l);
+      background:rgba(74,107,138,.08);
+      font-size:.84rem; line-height:1.55; color:var(--cream-d);
+    }
+    .booking-notice svg { color:var(--blue-l); flex:none; margin-top:1px; }
+    .booking-notice strong { color:var(--blue-l); font-weight:500; }
+
+    /* ─────────────────────────────────────────────────────── */
+    /*  SERVICES                                               */
+    /* ─────────────────────────────────────────────────────── */
+    #services { background:transparent; }
+    .svc-grid {
+      display:grid; grid-template-columns:repeat(4,1fr); gap:22px;
+    }
+    .svc-card {
+      position:relative; padding:46px 34px 40px;
+      background:var(--card-bg);
+      backdrop-filter:blur(2px);
+      border:1px solid var(--line);
+      transition:transform var(--ease), border-color var(--ease), background var(--ease);
+      overflow:hidden;
+    }
+    .svc-card::before {
+      content:''; position:absolute; top:0; left:0; width:100%; height:2px;
+      background:linear-gradient(90deg,var(--blue),var(--brown));
+      transform:scaleX(0); transform-origin:left; transition:transform var(--ease);
+    }
+    .svc-card:hover {
+      transform:translateY(-7px);
+      border-color:rgba(74,107,138,.45);
+      background:rgba(74,107,138,.06);
+    }
+    .svc-card:hover::before { transform:scaleX(1); }
+    .svc-icon {
+      width:50px; height:50px; margin-bottom:24px;
+      display:flex; align-items:center; justify-content:center;
+      border:1px solid rgba(106,143,173,.35); border-radius:50%;
+      color:var(--blue-l); transition:var(--ease);
+    }
+    .svc-card:hover .svc-icon { background:rgba(74,107,138,.14); border-color:var(--blue-l); }
+    .svc-num {
+      position:absolute; top:30px; right:34px;
+      font-family:var(--serif); font-size:2.6rem; font-weight:300;
+      color:var(--line); line-height:1;
+    }
+    .svc-card h3 {
+      font-family:var(--serif); font-size:1.6rem; font-weight:400;
+      color:var(--white); margin-bottom:12px; letter-spacing:.02em;
+    }
+    .svc-card p { font-size:.88rem; line-height:1.8; color:var(--cream-d); margin-bottom:22px; }
+    .svc-meta {
+      display:flex; align-items:center; gap:8px;
+      font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--blue-l);
+    }
+    .svc-meta::before { content:''; width:18px; height:1px; background:var(--blue-l); }
+
+    /* ─────────────────────────────────────────────────────── */
+    /*  GALLERY                                                */
+    /* ─────────────────────────────────────────────────────── */
+    #gallery { background:transparent; position:relative; }
+
+    .filter-bar {
+      display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:44px;
+    }
+    .ftab {
+      padding:10px 26px; font-family:var(--sans); font-size:.72rem;
+      letter-spacing:.14em; text-transform:uppercase; cursor:pointer;
+      background:transparent; border:1px solid var(--line-strong);
+      color:var(--cream-d); transition:var(--ease);
+    }
+    .ftab:hover { border-color:var(--blue); color:var(--blue-l); }
+    .ftab.active { background:var(--blue); border-color:var(--blue); color:var(--white); }
+
+    .gal-grid {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:5px;
+    }
+    .gal-item {
+      position:relative; aspect-ratio:4/3; overflow:hidden; cursor:pointer;
+      transition:opacity .4s, transform .4s;
+    }
+    .gal-item.hidden { display:none; }
+    .gal-item img { width:100%; height:100%; object-fit:cover; transition:transform .6s ease; }
+    .gal-item:hover img { transform:scale(1.07); }
+    .gal-overlay {
+      position:absolute; inset:0;
+      background:rgba(74,107,138,0); transition:background var(--ease);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .gal-item:hover .gal-overlay { background:rgba(74,107,138,.28); }
+    .gal-icon {
+      opacity:0; transform:scale(.6); transition:var(--ease);
+      color:#fff; font-size:2rem; line-height:1;
+    }
+    .gal-item:hover .gal-icon { opacity:1; transform:scale(1); }
+
+    .gal-more { text-align:center; margin-top:44px; }
+    .gal-more p { color:var(--cream-d); font-size:.84rem; margin-bottom:22px; }
+    .gal-social { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+    .gal-social a {
+      display:inline-flex; align-items:center; gap:11px;
+      padding:13px 30px; border:1px solid var(--line-strong);
+      font-family:var(--sans); font-size:.74rem; letter-spacing:.14em;
+      text-transform:uppercase; color:var(--cream);
+      transition:var(--ease);
+    }
+    .gal-social a svg { width:18px; height:18px; flex:none; }
+    .gal-social a:hover { transform:translateY(-3px); color:var(--white); }
+    .gal-social .gs-ig:hover { border-color:#c13584; background:rgba(193,53,132,.12); }
+    .gal-social .gs-fb:hover { border-color:#1877f2; background:rgba(24,119,242,.12); }
+
+    /* ─────────────────────────────────────────────────────── */
+    /*  LIGHTBOX                                               */
+    /* ─────────────────────────────────────────────────────── */
+    #lightbox {
+      display:none; position:fixed; inset:0; z-index:2000;
+      background:rgba(0,0,0,.96);
+      align-items:center; justify-content:center;
+    }
+    #lightbox.open { display:flex; }
+    #lb-img { max-width:90vw; max-height:88vh; object-fit:contain; }
+    .lb-close {
+      position:absolute; top:20px; right:28px;
+      font-size:2.2rem; line-height:1;
+      background:none; border:none; color:rgba(245,245,245,.6); cursor:pointer;
+      transition:color var(--ease);
+    }
+    .lb-close:hover { color:#fff; }
+    .lb-nav {
+      position:absolute; top:50%; transform:translateY(-50%);
+      width:46px; height:46px; background:none;
+      border:1px solid rgba(245,245,245,.22); color:#f5f5f5;
+      font-size:1.4rem; display:flex; align-items:center; justify-content:center;
+      cursor:pointer; transition:var(--ease);
+    }
+    .lb-nav:hover { background:var(--blue); border-color:var(--blue); }
+    .lb-prev { left:20px; }
+    .lb-next { right:20px; }
+
+    /* ─────────────────────────────────────────────────────── */
+    /*  ABOUT                                                  */
+    /* ─────────────────────────────────────────────────────── */
+    #about {
+      position:relative;
+      background:
+        linear-gradient(180deg, transparent 0%, var(--band) 14%, var(--band) 86%, transparent 100%);
+    }
+    #about::before {
+      content:''; position:absolute; inset:0; z-index:-1;
+      background:radial-gradient(60% 80% at 80% 50%, rgba(74,107,138,.08), transparent 60%);
+    }
+
+    .about-grid {
+      display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center;
+    }
+    .about-img-wrap { position:relative; }
+    .about-img-wrap img { height:540px; object-fit:cover; filter:grayscale(15%); }
+    .about-img-wrap::before {
+      content:''; position:absolute;
+      top:-14px; left:-14px; right:14px; bottom:14px;
+      border:1px solid var(--blue); z-index:-1;
+    }
+    .about-text h2 {
+      font-family:var(--serif); font-size:clamp(1.8rem,3.5vw,2.8rem);
+      font-weight:300; color:var(--white); margin-bottom:22px; line-height:1.25;
+    }
+    .about-text p { color:var(--cream-d); font-size:.93rem; line-height:1.85; margin-bottom:14px; }
+
+    /* ─────────────────────────────────────────────────────── */
+    /*  BOOKING                                                */
+    /* ─────────────────────────────────────────────────────── */
+    #booking { background:transparent; }
+
+    .form-wrap { max-width:700px; margin:0 auto; }
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+    .fg { display:flex; flex-direction:column; gap:7px; }
+    .fg.full { grid-column:1/-1; }
+    .fg label {
+      font-size:.68rem; letter-spacing:.15em; text-transform:uppercase; color:var(--cream-d);
+    }
+    .fg input, .fg select, .fg textarea {
+      background:var(--bg2); border:1px solid var(--line);
+      color:var(--cream); padding:13px 15px;
+      font-family:var(--sans); font-size:.88rem; font-weight:300;
+      outline:none; transition:border-color var(--ease); -webkit-appearance:none;
+    }
+    .fg select { cursor:pointer; }
+    .fg select option { background:var(--bg2); }
+    .fg textarea { resize:vertical; min-height:116px; }
+    .fg input:focus, .fg select:focus, .fg textarea:focus { border-color:var(--blue); }
+    .fg input::placeholder, .fg textarea::placeholder { color:var(--muted); }
+
+    .form-submit { margin-top:30px; text-align:center; }
+    .btn-submit {
+      background:var(--blue); border:none; color:var(--white);
+      padding:15px 52px; font-family:var(--sans);
+      font-size:.76rem; letter-spacing:.18em; text-transform:uppercase;
+      cursor:pointer; transition:var(--ease);
+    }
+    .btn-submit:hover { background:var(--blue-l); }
+    .btn-submit:disabled { opacity:.5; cursor:default; }
+    .form-note { font-size:.73rem; color:var(--cream-d); text-align:center; margin-top:14px; }
+
+    #formSuccess {
+      display:none; text-align:center; padding:52px 24px;
+      border:1px solid var(--blue);
+    }
+    #formSuccess .s-icon { font-size:2.8rem; margin-bottom:14px; }
+    #formSuccess h3 {
+      font-family:var(--serif); font-size:1.9rem; font-weight:300;
+      color:var(--white); margin-bottom:10px;
+    }
+    #formSuccess p { color:var(--cream-d); }
+
+    /* ─────────────────────────────────────────────────────── */
+    /*  FOOTER                                                 */
+    /* ─────────────────────────────────────────────────────── */
+    footer {
+      background:var(--footer-bg); padding:56px 0 28px;
+      border-top:1px solid var(--line);
+    }
+    .footer-grid {
+      display:grid; grid-template-columns:1fr auto 1fr;
+      gap:40px; align-items:start; margin-bottom:44px;
+    }
+    .f-brand { display:flex; flex-direction:column; gap:10px; }
+    .f-logo {
+      display:flex; align-items:center; gap:10px;
+      font-family:var(--serif); font-size:1.15rem; color:var(--white);
+    }
+    .f-logo img { width:30px; height:30px; object-fit:contain; filter:brightness(0) invert(1); }
+    .f-tagline { font-size:.78rem; color:var(--cream-d); line-height:1.65; }
+    .f-nav { display:flex; flex-direction:column; gap:11px; text-align:center; }
+    .f-nav a {
+      font-size:.72rem; letter-spacing:.12em; text-transform:uppercase;
+      color:var(--cream-d); transition:color var(--ease);
+    }
+    .f-nav a:hover { color:var(--blue-l); }
+    .f-social { display:flex; flex-direction:column; align-items:flex-end; gap:12px; }
+    .social-row { display:flex; gap:12px; }
+    .s-link {
+      width:38px; height:38px; border:1px solid var(--line);
+      display:flex; align-items:center; justify-content:center;
+      color:var(--cream-d); font-size:.95rem; transition:var(--ease);
+    }
+    .s-link:hover { border-color:var(--blue); color:var(--blue-l); background:rgba(74,107,138,.1); }
+    .f-email { font-size:.78rem; color:var(--cream-d); }
+    .footer-bottom {
+      text-align:center; padding-top:28px;
+      border-top:1px solid var(--line);
+      font-size:.65rem; letter-spacing:.1em; color:var(--muted); text-transform:uppercase;
+    }
+
+    /* ─────────────────────────────────────────────────────── */
+    /*  Flatpickr overrides                                    */
+    /* ─────────────────────────────────────────────────────── */
+    .flatpickr-calendar { background:var(--bg2) !important; border-color:var(--line) !important; }
+    .flatpickr-day { color:var(--cream) !important; }
+    .flatpickr-day.selected { background:var(--blue) !important; border-color:var(--blue) !important; }
+    .flatpickr-day:hover:not(.selected) { background:rgba(74,107,138,.28) !important; }
+    .flatpickr-months .flatpickr-month,
+    .flatpickr-current-month input.cur-year,
+    .flatpickr-weekday { color:var(--cream) !important; fill:var(--cream) !important; }
+    .flatpickr-day.flatpickr-disabled { color:rgba(237,224,196,.22) !important; }
+    .numInputWrapper span { border-color:var(--line) !important; }
+
+    /* ─────────────────────────────────────────────────────── */
+    /*  Responsive                                             */
+    /* ─────────────────────────────────────────────────────── */
+    @media (max-width:900px) {
+      .gal-grid { grid-template-columns:repeat(2,1fr); }
+      .svc-grid { grid-template-columns:repeat(2,1fr); }
+      #intro { padding:96px 0 0; }
+      .about-grid { grid-template-columns:1fr; gap:36px; }
+      .about-img-wrap { display:none; }
+      .footer-grid { grid-template-columns:1fr; text-align:center; }
+      .f-social { align-items:center; }
+    }
+    @media (max-width:600px) {
+      .nav-links { display:none; }
+      .hamburger { display:flex; }
+      .gal-grid { grid-template-columns:1fr; }
+      .form-grid { grid-template-columns:1fr; }
+      .fg.full { grid-column:1; }
+      section { padding:72px 0; }
+      .stats { gap:20px; }
+      .hero-logo { width:64px; height:64px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Animated background (drawn behind everything) -->
+<canvas id="bgCanvas" aria-hidden="true"></canvas>
+<div class="bg-nebula" aria-hidden="true"></div>
+
+<!-- ═══════════════════════ NAV ═══════════════════════ -->
+<nav id="nav">
+  <a href="#" class="nav-logo">
+    <img src="images/logo-mark.png" alt="Botoscope">
+    Botoscope
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#gallery">Munkáim</a></li>
+      <li><a href="#about">Rólam</a></li>
+      <li><a href="#booking">Foglalás</a></li>
+    </ul>
+    <button class="theme-toggle" id="themeToggle" aria-label="Világos / sötét mód">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+        <circle cx="12" cy="12" r="4.2"/>
+        <path d="M12 2.5v2.4M12 19.1v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/>
+      </svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"/>
+      </svg>
+    </button>
+    <button class="hamburger" id="burger" aria-label="Menü" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div id="mobileMenu">
+  <a href="#gallery" onclick="toggleMenu()">Munkáim</a>
+  <a href="#about"   onclick="toggleMenu()">Rólam</a>
+  <a href="#booking" onclick="toggleMenu()">Foglalás</a>
+</div>
+
+<!-- ═══════════════════════ HERO ══════════════════════ -->
+<section id="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-content">
+    <img src="images/logo-mark.png" alt="Botoscope" class="hero-logo">
+    <h1 class="hero-title">Botoscope</h1>
+    <p class="hero-tagline">Pillanatok, örökre megörökítve</p>
+    <div class="hero-cta">
+      <a href="#gallery" class="btn btn-primary">Munkáim</a>
+      <a href="#booking" class="btn btn-outline">Foglalj időpontot</a>
+    </div>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<!-- ══════════════════════ INTRO ══════════════════════ -->
+<section id="intro">
+  <div class="container">
+    <div class="intro-mark fi"></div>
+    <p class="intro-statement fi">
+      Minden kép egy <em>történet</em> — a tiéd. Az én feladatom, hogy
+      úgy őrizzem meg, ahogy átélted: <em>őszintén</em> és időtállóan.
+    </p>
+    <p class="intro-sub fi">
+      Természetes fény, nyugodt tempó és valódi pillanatok. Nem pózolt
+      mosolyok — hanem az a fajta emlék, amihez évek múlva is visszatérsz.
+    </p>
+    <div class="value-strip fi">
+      <div class="value-pill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+        Pályakezdő lelkesedéssel
+      </div>
+      <div class="value-pill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+          <circle cx="7" cy="7" r="1.2" fill="currentColor" stroke="none"/>
+        </svg>
+        Budget-barát árak
+      </div>
+      <div class="value-pill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        Segítő fotóst is hozhatok
+      </div>
+      <div class="value-pill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        Nyári szezon · Júl – Szept
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════════════ SERVICES ════════════════════ -->
+<section id="services">
+  <div class="container">
+    <p class="sec-eyebrow fi">Szolgáltatások</p>
+    <h2 class="sec-title fi">Amit kínálok</h2>
+
+    <div class="svc-grid">
+      <article class="svc-card fi">
+        <span class="svc-num">01</span>
+        <div class="svc-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+        </div>
+        <h3>Portré</h3>
+        <p>Egyéni, páros és családi portrék, amelyek a karaktert és a hangulatot tükrözik — a kedvenc helyszíneden.</p>
+        <a href="#booking" class="svc-meta">Egyeztetés</a>
+      </article>
+
+      <article class="svc-card fi">
+        <span class="svc-num">02</span>
+        <div class="svc-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+            <path d="M12 21s-7-4.5-7-9.5A4 4 0 0 1 12 8a4 4 0 0 1 7 3.5C19 16.5 12 21 12 21z"/>
+          </svg>
+        </div>
+        <h3>Esemény</h3>
+        <p>A nagy nap minden rezdülése — az előkészülettől az utolsó táncig. Riportszerű, természetes megközelítéssel.</p>
+        <a href="#booking" class="svc-meta">Egyeztetés</a>
+      </article>
+
+      <article class="svc-card fi">
+        <span class="svc-num">03</span>
+        <div class="svc-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+            <path d="M3 19l5-6 4 4 3-4 6 6"/>
+            <circle cx="8" cy="7" r="2"/>
+          </svg>
+        </div>
+        <h3>Táj &amp; Természet</h3>
+        <p>Csendes, atmoszférikus tájképek a fény legszebb óráiban — fali nyomatként vagy egyedi ajándékként is.</p>
+        <a href="#booking" class="svc-meta">Egyeztetés</a>
+      </article>
+
+      <article class="svc-card fi">
+        <span class="svc-num">04</span>
+        <div class="svc-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <h3>Segítő fotós</h3>
+        <p>Nagyobb eseményekre magammal hozhatok egy segítő személyt — aki háttérben dolgozik, vagy egy különálló <em>fotósarokban</em> varázsolja megörökíthetővé a pillanatokat.</p>
+        <a href="#booking" class="svc-meta">Egyeztetés</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i></div>
+
+<!-- ══════════════════════ GALLERY ════════════════════ -->
+<section id="gallery">
+  <div class="container">
+    <p class="sec-eyebrow fi">Portfolio</p>
+    <h2 class="sec-title fi">Munkáim</h2>
+
+    <div class="filter-bar fi">
+      <button class="ftab active" data-f="portrait">Portré</button>
+      <button class="ftab" data-f="wedding">Esemény</button>
+      <button class="ftab" data-f="landscape">Táj &amp; Természet</button>
+    </div>
+
+    <div class="gal-grid" id="galGrid">
+      <!-- gallery.js tölti fel a képeket Cloudinary-ból -->
+    </div><!-- /gal-grid -->
+
+    <div class="gal-more fi">
+      <p>További munkáimat a közösségi oldalaimon láthatod — kövess, hogy ne maradj le az újdonságokról!</p>
+      <!-- ← Cseréld le a href-eket a saját Instagram / Facebook oldaladra -->
+      <div class="gal-social">
+        <a href="https://www.instagram.com/botoscope/" target="_blank" rel="noopener" class="gs-ig" aria-label="Instagram – további képek">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="2" width="20" height="20" rx="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r=".9" fill="currentColor" stroke="none"/>
+          </svg>
+          Instagram
+        </a>
+        <a href="https://www.facebook.com/profile.php?id=61580925136185&sk=about" target="_blank" rel="noopener" class="gs-fb" aria-label="Facebook – további képek">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+          </svg>
+          Facebook
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ LIGHTBOX ══════════════════════ -->
+<div id="lightbox">
+  <button class="lb-close" onclick="lbClose()">×</button>
+  <button class="lb-nav lb-prev" onclick="lbNav(-1)">‹</button>
+  <img id="lb-img" src="" alt="Fotó">
+  <button class="lb-nav lb-next" onclick="lbNav(1)">›</button>
+</div>
+
+<div class="divider"><i></i></div>
+
+<!-- ════════════════════ ABOUT ════════════════════════ -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+
+      <div class="about-img-wrap fi">
+        <!-- ← Cseréld le a saját fotódra: images/about.jpg -->
+        <img src="images/self.jpg" alt="Botos Kristóf">
+      </div>
+
+      <div class="about-text fi">
+        <h2>Szia, Kristóf vagyok.</h2>
+        <p>
+          A fényképezés számomra több mint szakma – lehetőség arra, hogy megörökítsem azokat a
+          pillanatokat, amelyek valóban számítanak. Egy esküvő intim másodpercei, egy portré mögötti
+          karakter, vagy egy táj csöndes szépsége: mindegyikben az igazi érzelmeket keresem.
+        </p>
+        <p>
+          Pályakezdőként tudom, hogy a bizalom megszerzése időbe telik — ezért <strong>versenyképes,
+          budget-barát áron</strong> dolgozom. Célom, hogy minőségi képeket kapj anélkül, hogy kompromisszumot
+          kellene kötnöd az árban. Ha nagyobb eseményre van szükséged, akár egy segítő személyt is
+          magammal hozhatok.
+        </p>
+        <p>
+          Nem csupán képeket alkotok – emlékeket. Olyanokat, amelyeket újra és újra szívesen nézel majd.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i></div>
+
+<!-- ════════════════════ BOOKING ══════════════════════ -->
+<section id="booking">
+  <div class="container">
+    <p class="sec-eyebrow fi">Időpontfoglalás</p>
+    <h2 class="sec-title fi">Dolgozzunk együtt</h2>
+
+    <div class="form-wrap fi">
+      <!--
+        FORMSPREE BEÁLLÍTÁS:
+          1. Menj a https://formspree.io oldalra → regisztrálj (ingyenes)
+          2. Hozz létre egy új formot → kapsz egy linket, pl.:
+             https://formspree.io/f/xpwzjbkq
+          3. Cseréld le az alábbi action="" értékét erre a linkre
+      -->
+      <div class="booking-notice">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        <span>Foglalás <strong>július 10. – szeptember 30.</strong> közötti időpontokra lehetséges (nyári szezon). Az időszakon kívüli megkereséseket sajnos nem tudom fogadni.</span>
+      </div>
+
+      <form id="bookingForm" action="https://formspree.io/f/mbdeyaoe" method="POST">
+        <input type="hidden" name="_subject" value="Új foglalási kérelem – Botoscope">
+
+        <div class="form-grid">
+          <div class="fg">
+            <label for="name">Név *</label>
+            <input type="text" id="name" name="name" placeholder="Kovács Anna" required>
+          </div>
+          <div class="fg">
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="email" placeholder="pelda@email.com" required>
+          </div>
+          <div class="fg">
+            <label for="phone">Telefonszám</label>
+            <input type="tel" id="phone" name="phone" placeholder="+40763754472">
+          </div>
+          <div class="fg">
+            <label for="date">Kívánt dátum *</label>
+            <input type="text" id="date" name="date" placeholder="Válassz dátumot" required readonly>
+          </div>
+          <div class="fg full">
+            <label for="type">Fotózás típusa *</label>
+            <select id="type" name="type" required>
+              <option value="" disabled selected>Válassz kategóriát</option>
+              <option value="portrait">Portré</option>
+              <option value="event">Rendezvény / Esemény</option>
+              <option value="landscape">Táj / Természet</option>
+              <option value="other">Egyéb</option>
+            </select>
+          </div>
+          <div class="fg full">
+            <label for="message">Üzenet / Elképzelések</label>
+            <textarea id="message" name="message"
+              placeholder="Írd le az elképzeléseidet, helyszín ötleteket, különleges kéréseket..."></textarea>
+          </div>
+        </div>
+
+        <div class="form-submit">
+          <button type="submit" class="btn-submit">Kérelem elküldése</button>
+          <p class="form-note">* 24–48 órán belül visszajelzek emailben a részletekkel.</p>
+        </div>
+      </form>
+
+      <div id="formSuccess">
+        <div class="s-icon">📷</div>
+        <h3>Köszönöm a megkeresést!</h3>
+        <p>Üzeneted megkaptam. 24–48 órán belül visszajelzek emailben.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FOOTER ════════════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+
+      <div class="f-brand">
+        <div class="f-logo">
+          <img src="images/logo-mark.png" alt="Botoscope">
+          Botoscope
+        </div>
+        <p class="f-tagline">Pillanatok, örökre megörökítve.<br>Portré · Esemény · Táj</p>
+      </div>
+
+      <nav class="f-nav">
+        <a href="#gallery">Munkáim</a>
+        <a href="#about">Rólam</a>
+        <a href="#booking">Foglalás</a>
+      </nav>
+
+      <div class="f-social">
+        <div class="social-row">
+          <!-- ← Cseréld le a href-eket a saját profilodra -->
+          <a href="https://www.instagram.com/botoscope/" target="_blank" class="s-link" aria-label="Instagram">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="2" width="20" height="20" rx="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.5" cy="6.5" r=".9" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+          <a href="https://www.facebook.com/profile.php?id=61580925136185&sk=about" target="_blank" class="s-link" aria-label="Facebook">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+            </svg>
+          </a>
+        </div>
+        <!-- ← Cseréld le a saját emailedre -->
+        <p class="f-email">botoscopeph@email.com</p>
+      </div>
+
+    </div>
+    <div class="footer-bottom">© 2025 Botoscope · Minden jog fenntartva</div>
+  </div>
+</footer>
+
+<!-- ═══════════════════ SCRIPTS ═══════════════════════ -->
+
+<!-- ── Cloudinary galéria adatok ─────────────────────── -->
+<script src="gallery.js"></script>
+
+<!-- ── Animated starfield background ─────────────────── -->
+<script>
+(function () {
+  const canvas = document.getElementById('bgCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── Tweakables ── */
+  const COUNT    = 300;        // hány csillag
+  const SPEED    = 0.32;       // utazási sebesség (kisebb = lágyabb)
+  const MAXDEPTH = 1500;
+
+  /* a színek az aktív témából (CSS változók) jönnek */
+  function readColors() {
+    const cs = getComputedStyle(document.documentElement);
+    return {
+      star: cs.getPropertyValue('--star').trim()        || '237,224,196',
+      bg:   cs.getPropertyValue('--canvas-bg').trim()   || '#0a0a0f',
+      fade: cs.getPropertyValue('--canvas-fade').trim() || '10,10,15',
+    };
+  }
+  let COL = readColors();
+
+  let width, height, dpr, stars = [], tick = 0, raf = null;
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    width  = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width  = Math.round(width  * dpr);
+    canvas.height = Math.round(height * dpr);
+    canvas.style.width  = width  + 'px';
+    canvas.style.height = height + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = COL.bg;
+    ctx.fillRect(0, 0, width, height);
+  }
+
+  function makeStar(z) {
+    return {
+      x: (Math.random() - 0.5) * width  * 2,
+      y: (Math.random() - 0.5) * height * 2,
+      z: z == null ? Math.random() * MAXDEPTH : z,
+      ts: Math.random() * 0.02 + 0.01,
+      to: Math.random() * Math.PI * 2,
+    };
+  }
+  function seed() { stars = Array.from({ length: COUNT }, () => makeStar()); }
+
+  function drawStar(s, animate) {
+    const scale = 400 / s.z;
+    const x = width  / 2 + s.x * scale;
+    const y = height / 2 + s.y * scale;
+    if (x < -10 || x > width + 10 || y < -10 || y > height + 10) return;
+    const size = Math.max(0.5, (1 - s.z / MAXDEPTH) * 2.4);
+    let op = (1 - s.z / MAXDEPTH) * 0.8 + 0.1;
+    if (animate && s.ts > 0.015) op *= 0.7 + 0.3 * Math.sin(tick * s.ts + s.to);
+    ctx.beginPath();
+    ctx.arc(x, y, size, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(' + COL.star + ',1)';
+    ctx.globalAlpha = op;
+    ctx.fill();
+    if (s.z < MAXDEPTH * 0.3) {
+      const len = (1 - s.z / MAXDEPTH) * SPEED * 8;
+      const a = Math.atan2(s.y, s.x);
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x - Math.cos(a) * len, y - Math.sin(a) * len);
+      ctx.strokeStyle = 'rgba(' + COL.star + ',1)';
+      ctx.globalAlpha = op * 0.3;
+      ctx.lineWidth = size * 0.5;
+      ctx.stroke();
+    }
+  }
+
+  function frame() {
+    tick++;
+    ctx.fillStyle = 'rgba(' + COL.fade + ',0.2)';   // halvány csóva-elhalványulás
+    ctx.fillRect(0, 0, width, height);
+    for (const s of stars) {
+      s.z -= SPEED * 2;
+      if (s.z <= 0) {
+        s.x = (Math.random() - 0.5) * width  * 2;
+        s.y = (Math.random() - 0.5) * height * 2;
+        s.z = MAXDEPTH;
+      }
+      drawStar(s, true);
+    }
+    ctx.globalAlpha = 1;
+    raf = requestAnimationFrame(frame);
+  }
+
+  function start() { if (!raf && !reduce) raf = requestAnimationFrame(frame); }
+  function stop()  { if (raf) { cancelAnimationFrame(raf); raf = null; } }
+
+  resize();
+  seed();
+
+  if (reduce) {
+    // mozgás nélkül: egyszer kirajzoljuk a csillagokat
+    for (const s of stars) drawStar(s, false);
+    ctx.globalAlpha = 1;
+  } else {
+    start();
+  }
+
+  let rt;
+  window.addEventListener('resize', () => {
+    clearTimeout(rt);
+    rt = setTimeout(() => { resize(); seed(); }, 200);
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stop(); else start();
+  });
+
+  /* téma váltáskor új paletta + tiszta lap */
+  window.addEventListener('themechange', () => {
+    COL = readColors();
+    ctx.fillStyle = COL.bg;
+    ctx.fillRect(0, 0, width, height);
+    if (reduce) { for (const s of stars) drawStar(s, false); ctx.globalAlpha = 1; }
+  });
+})();
+</script>
+
+<!-- ── Theme toggle (system default + manual) ────────── -->
+<script>
+(function () {
+  const KEY  = 'botoscope-theme';
+  const root = document.documentElement;
+  const meta = document.getElementById('metaTheme');
+  const mq   = window.matchMedia('(prefers-color-scheme: light)');
+
+  function apply(theme) {
+    root.setAttribute('data-theme', theme);
+    if (meta) meta.setAttribute('content', theme === 'light' ? '#f4f0e8' : '#0a0a0f');
+    window.dispatchEvent(new CustomEvent('themechange', { detail: theme }));
+  }
+  function systemTheme() { return mq.matches ? 'light' : 'dark'; }
+
+  // initial: stored choice wins, otherwise follow the system
+  apply(localStorage.getItem(KEY) || systemTheme());
+
+  // follow live OS changes only while the user hasn't chosen manually
+  mq.addEventListener('change', () => {
+    if (!localStorage.getItem(KEY)) apply(systemTheme());
+  });
+
+  const btn = document.getElementById('themeToggle');
+  if (btn) btn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    localStorage.setItem(KEY, next);
+    apply(next);
+  });
+})();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/hu.js"></script>
+<script>
+
+/* ── Date picker (nyári szezon: júl 10 – szept 30) ── */
+(function () {
+  const now  = new Date();
+  const yr   = now.getFullYear();
+  const end  = new Date(yr, 8, 30);   // szept 30 idén
+  const tYr  = now > end ? yr + 1 : yr;  // ha idén lejárt, jövő évi szezon
+  flatpickr('#date', {
+    locale: 'hu',
+    minDate: `${tYr}-07-10`,
+    maxDate: `${tYr}-09-30`,
+    dateFormat: 'Y. m. d.',
+    disableMobile: false,
+    disable: [d => d.getDay() === 0]  // vasárnapok tiltva
+  });
+})();
+
+/* ── Navbar scroll ───────────────────────────────── */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', scrollY > 50);
+}, { passive: true });
+
+/* ── Hero → background crossfade on scroll ───────── */
+const hero    = document.getElementById('hero');
+const heroBg  = document.getElementById('heroBg');
+const heroCt  = document.querySelector('.hero-content');
+function heroScroll() {
+  const y = window.scrollY;
+  if (y > innerHeight) return;                 // csak az első képernyőn
+  const p = Math.min(1, y / (innerHeight * 0.9));   // 0 → 1 haladás
+  heroBg.style.transform = `scale(${1.06 + p * 0.10}) translateY(${y * 0.28}px)`;
+  heroBg.style.filter    = `blur(${p * 5}px)`;
+  hero.style.opacity     = String(1 - p);      // szépen feloldódik a csillagmezőbe
+  if (heroCt) heroCt.style.transform = `translateY(${y * 0.12}px) scale(${1 - p * 0.05})`;
+}
+window.addEventListener('scroll', heroScroll, { passive: true });
+heroScroll();
+
+/* ── Mobile menu ─────────────────────────────────── */
+function toggleMenu() {
+  document.getElementById('burger').classList.toggle('open');
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const b = document.getElementById('burger');
+  const m = document.getElementById('mobileMenu');
+  if (!b.contains(e.target) && !m.contains(e.target)) {
+    b.classList.remove('open');
+    m.classList.remove('open');
+  }
+});
+
+/* ── Gallery filter (category-only — one category shown at a time) ── */
+function applyFilter(f) {
+  document.querySelectorAll('.gal-item').forEach(item => {
+    const show = item.dataset.cat === f;
+    item.classList.toggle('hidden', !show);
+    if (show) item.classList.add('in');   // garantáltan látszik (nem függ a scroll-fade-től)
+  });
+}
+document.querySelectorAll('.ftab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.ftab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    applyFilter(tab.dataset.f);
+  });
+});
+// induláskor csak az alapértelmezett (aktív) kategória töltődik be
+const initTab = document.querySelector('.ftab.active') || document.querySelector('.ftab');
+if (initTab) applyFilter(initTab.dataset.f);
+
+/* ── Lightbox ────────────────────────────────────── */
+let lbIdx = 0;
+
+function visItems() {
+  return [...document.querySelectorAll('.gal-item:not(.hidden)')];
+}
+
+document.querySelectorAll('.gal-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const list = visItems();
+    lbIdx = list.indexOf(item);
+    document.getElementById('lb-img').src = item.dataset.full || item.querySelector('img').src;
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+});
+
+function lbClose() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function lbNav(dir) {
+  const list = visItems();
+  lbIdx = (lbIdx + dir + list.length) % list.length;
+  document.getElementById('lb-img').src = list[lbIdx].dataset.full || list[lbIdx].querySelector('img').src;
+}
+
+document.getElementById('lightbox').addEventListener('click', e => {
+  if (e.target === e.currentTarget) lbClose();
+});
+
+document.addEventListener('keydown', e => {
+  const lb = document.getElementById('lightbox');
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'Escape')      lbClose();
+  if (e.key === 'ArrowLeft')   lbNav(-1);
+  if (e.key === 'ArrowRight')  lbNav(1);
+});
+
+/* ── Scroll fade-in ──────────────────────────────── */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -36px 0px' });
+
+document.querySelectorAll('.fi').forEach(el => io.observe(el));
+
+/* ── Form (Formspree AJAX) ───────────────────────── */
+const form = document.getElementById('bookingForm');
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = form.querySelector('.btn-submit');
+  btn.textContent = 'Küldés...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { Accept: 'application/json' }
+    });
+    if (res.ok) {
+      form.style.display = 'none';
+      document.getElementById('formSuccess').style.display = 'block';
+    } else {
+      btn.textContent = 'Hiba – próbáld újra';
+      btn.disabled = false;
+    }
+  } catch {
+    btn.textContent = 'Hiba – próbáld újra';
+    btn.disabled = false;
+  }
+});
+
+</script>
+</body>
+</html>
