@@ -42,16 +42,17 @@ const GALLERY = [
   { id: 'event-5_qaxkct', cat: 'wedding',   alt: 'Esemény 5' },
 
   /* ── Táj & Természet ── */
-  { id: 'taj-1_rssgpu',       cat: 'landscape', alt: 'Táj 1' },
-  { id: 'taj-2_htfqrd',       cat: 'landscape', alt: 'Táj 2' },
-  { id: 'taj-3_o7q5qw',       cat: 'landscape', alt: 'Táj 3' },
-  { id: 'taj-4_cpq5ta',       cat: 'landscape', alt: 'Táj 4' },
-  { id: 'taj-5_coiwyf',       cat: 'landscape', alt: 'Táj 5' },
+  { id: 'taj-1_rssgpu',   cat: 'landscape', alt: 'Táj 1' },
+  { id: 'taj-2_htfqrd',   cat: 'landscape', alt: 'Táj 2' },
+  { id: 'taj-3_o7q5qw',   cat: 'landscape', alt: 'Táj 3' },
+  { id: 'taj-4_cpq5ta',   cat: 'landscape', alt: 'Táj 4' },
+  { id: 'taj-5_coiwyf',   cat: 'landscape', alt: 'Táj 5' },
 ];
 
 /* ── URL segédfüggvények ─────────────────────────────────────── */
 function thumbUrl(id) {
-  return `https://res.cloudinary.com/${CLOUD}/image/upload/f_auto,q_auto,w_800,h_600,c_fill/${id}`;
+  // c_scale: megtartja az eredeti képarányt, nem vágja körbe
+  return `https://res.cloudinary.com/${CLOUD}/image/upload/f_auto,q_auto,w_900,c_scale/${id}`;
 }
 function fullUrl(id) {
   return `https://res.cloudinary.com/${CLOUD}/image/upload/f_auto,q_auto,w_1920/${id}`;
