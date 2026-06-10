@@ -68,6 +68,38 @@ const GALLERY = [
   { id: 'mvh-1-3_wf5l4u',                   cat: 'landscape', alt: 'Táj 11' },
 ];
 
+/* ─────────────────────────────────────────────────────────────
+   KIEMELT SOROZATOK (albumok) — kattintásra lightbox-vetítés
+   Új album: adj hozzá egy objektumot (cover + ids Public ID-k)
+   ───────────────────────────────────────────────────────────── */
+const ALBUMS = [
+  {
+    key: 'szureti',
+    title: 'Szüreti bál 2025',
+    sub: 'Tánc, bor s jókedv — ahogy illik',
+    cover: 'szureti_bal_gif_2025-55_halybo',
+    ids: [
+      'szureti_bal_gif_2025-55_halybo',
+      'szureti_bal_gif_2025-2_z4ysnv',
+      'szureti_bal_gif_2025-67_kkbpac',
+      'szureti_bal_gif_2025-137_egr3vc',
+    ],
+  },
+  {
+    key: 'gyimes',
+    title: 'Gyimes & Békás-szoros',
+    sub: 'Hegyek közt, ahol a csend beszél',
+    cover: 'Gyimes_2025-10_idbku6',
+    ids: [
+      'Gyimes_2025-10_idbku6',
+      'bekasi_szoros-14_jknpxh',
+      'Bekasi_2025-3_qxvyse',
+      'Bekasi_2025-5_uudjar',
+      'fius-bekas-29_coxgo6',
+    ],
+  },
+];
+
 /* ── Kategória címkék + akcentus színek (hover felirat) ──────── */
 const CATS = {
   portrait:  { label: 'Portré',          color: '#6a8fad' },
@@ -117,7 +149,23 @@ function fullUrl(id) {
   grid.querySelectorAll('img').forEach(im => { if (im.complete && im.naturalWidth) im.classList.add('ld'); });
 })();
 
-/* ── Oldal képek beállítása ──────────────────────────────────── */
+/* ── Albumok renderelése ─────────────────────────────────────── */
+(function renderAlbums() {
+  const grid = document.getElementById('albGrid');
+  if (!grid) return;
+  grid.innerHTML = ALBUMS.map(a => `
+    <article class="alb-card fi" data-album="${a.key}">
+      <div class="alb-cover" style="background-image:url('${imgUrl(a.cover, 900)}')"></div>
+      <div class="alb-info">
+        <h3>${a.title}</h3>
+        <p>${a.sub}</p>
+        <span class="alb-cta">Nézzed végig</span>
+      </div>
+    </article>
+  `).join('');
+})();
+
+/* ── Oldal képek beállítása ─────────────────────────────── */
 (function renderSite() {
   const base = BASE;
 
