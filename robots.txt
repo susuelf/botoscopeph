@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://susuelf.github.io/botoscopeph/sitemap.xml
