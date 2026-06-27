@@ -68,13 +68,58 @@ const GALLERY = [
   { id: 'mvh-1-3_wf5l4u',                   cat: 'landscape', alt: 'Táj 11' },
 ];
 
+/* ─────────────────────────────────────────────────────────────
+   KIEMELT SOROZATOK (albumok) — kattintásra lightbox-vetítés
+   Új album: adj hozzá egy objektumot (cover + ids Public ID-k)
+   ───────────────────────────────────────────────────────────── */
+const ALBUMS = [
+  {
+    key: 'szureti',
+    title: 'Szüreti bál 2025',
+    sub: 'Tánc, bor s jókedv — ahogy illik',
+    cover: 'szureti_bal_gif_2025-55_halybo',
+    ids: [
+      'szureti_bal_gif_2025-55_halybo',
+      'szureti_bal_gif_2025-2_z4ysnv',
+      'szureti_bal_gif_2025-67_kkbpac',
+      'szureti_bal_gif_2025-137_egr3vc',
+    ],
+  },
+  {
+    key: 'gyimes',
+    title: 'Gyimes & Békás-szoros',
+    sub: 'Hegyek közt, ahol a csend beszél',
+    cover: 'Gyimes_2025-10_idbku6',
+    ids: [
+      'Gyimes_2025-10_idbku6',
+      'bekasi_szoros-14_jknpxh',
+      'Bekasi_2025-3_qxvyse',
+      'Bekasi_2025-5_uudjar',
+      'fius-bekas-29_coxgo6',
+    ],
+  },
+];
+
+/* ── Kategória címkék + akcentus színek (hover felirat) ──────── */
+const CATS = {
+  portrait:  { label: 'Portré',          color: '#6a8fad' },
+  wedding:   { label: 'Esemény',         color: '#a87b4d' },
+  landscape: { label: 'Táj & Természet', color: '#5f7f5f' },
+};
+
 /* ── URL segédfüggvények ─────────────────────────────────────── */
-function thumbUrl(id) {
+const BASE = `https://res.cloudinary.com/${CLOUD}/image/upload`;
+
+function imgUrl(id, w) {
   // c_scale: megtartja az eredeti képarányt, nem vágja körbe
-  return `https://res.cloudinary.com/${CLOUD}/image/upload/f_auto,q_auto,w_900,c_scale/${id}`;
+  return `${BASE}/f_auto,q_auto,w_${w},c_scale/${id}`;
+}
+function lqipUrl(id) {
+  // pici, elmosott előnézet (blur-up)
+  return `${BASE}/f_auto,q_auto:low,w_32,e_blur:800,c_scale/${id}`;
 }
 function fullUrl(id) {
-  return `https://res.cloudinary.com/${CLOUD}/image/upload/f_auto,q_auto,w_1920/${id}`;
+  return `${BASE}/f_auto,q_auto,w_1920/${id}`;
 }
 
 /* ── Galéria renderelés ──────────────────────────────────────── */
@@ -82,17 +127,47 @@ function fullUrl(id) {
   const grid = document.getElementById('galGrid');
   if (!grid) return;
 
-  grid.innerHTML = GALLERY.map(item => `
-    <div class="gal-item fi" data-cat="${item.cat}" data-full="${fullUrl(item.id)}">
-      <img src="${thumbUrl(item.id)}" alt="${item.alt}" loading="lazy" decoding="async">
+  const SIZES = '(max-width:600px) 85vw, (max-width:900px) 46vw, 31vw';
+
+  grid.innerHTML = GALLERY.map(item => {
+    const c = CATS[item.cat] || { label: item.cat, color: '#6a8fad' };
+    const cap = item.title ? `<b>${c.label}</b><span>${item.title}</span>` : `<b>${c.label}</b>`;
+    return `
+    <div class="gal-item fi" data-cat="${item.cat}" data-full="${fullUrl(item.id)}"
+         style="background-image:url('${lqipUrl(item.id)}');background-size:cover;background-position:center;">
+      <img src="${imgUrl(item.id, 900)}"
+           srcset="${imgUrl(item.id, 480)} 480w, ${imgUrl(item.id, 900)} 900w, ${imgUrl(item.id, 1400)} 1400w"
+           sizes="${SIZES}"
+           alt="${item.alt}" loading="lazy" decoding="async"
+           onload="this.classList.add('ld')">
       <div class="gal-overlay"><span class="gal-icon">⊕</span></div>
-    </div>
+      <div class="gal-cap" style="--cap:${c.color}">${cap}</div>
+    </div>`;
+  }).join('');
+
+  // cache-ből azonnal betöltött képek
+  grid.querySelectorAll('img').forEach(im => { if (im.complete && im.naturalWidth) im.classList.add('ld'); });
+})();
+
+/* ── Albumok renderelése ─────────────────────────────────────── */
+(function renderAlbums() {
+  const grid = document.getElementById('albGrid');
+  if (!grid) return;
+  grid.innerHTML = ALBUMS.map(a => `
+    <article class="alb-card fi" data-album="${a.key}">
+      <div class="alb-cover" style="background-image:url('${imgUrl(a.cover, 900)}')"></div>
+      <div class="alb-info">
+        <h3>${a.title}</h3>
+        <p>${a.sub}</p>
+        <span class="alb-cta">Nézzed végig</span>
+      </div>
+    </article>
   `).join('');
 })();
 
-/* ── Oldal képek beállítása ──────────────────────────────────── */
+/* ── Oldal képek beállítása ─────────────────────────────── */
 (function renderSite() {
-  const base = `https://res.cloudinary.com/${CLOUD}/image/upload`;
+  const base = BASE;
 
   // Favicon
   const faviconPng  = `${base}/w_64,f_png/${SITE.favicon}`;
@@ -104,17 +179,27 @@ function fullUrl(id) {
   const touch = document.querySelector('link[rel="apple-touch-icon"]');
   if (touch) touch.href = touchIcon;
 
-  // Hero háttérkép
+  // Hero háttérkép — kijelzőhöz illő méret + preload
   const heroBg = document.getElementById('heroBg');
   if (heroBg) {
-    heroBg.style.backgroundImage =
-      `url('${base}/f_auto,q_auto,w_1920/${SITE.hero}')`;
+    const w = window.innerWidth <= 720 ? 1080 : 1920;
+    const heroUrl = `${base}/f_auto,q_auto,w_${w}/${SITE.hero}`;
+    const pre = document.createElement('link');
+    pre.rel = 'preload'; pre.as = 'image'; pre.href = heroUrl;
+    document.head.appendChild(pre);
+    heroBg.style.backgroundImage = `url('${heroUrl}')`;
   }
 
-  // Rólam fotó
+  // Rólam fotó — responsive srcset
   const aboutImg = document.querySelector('img[alt="Botos Kristóf"]');
   if (aboutImg) {
     aboutImg.src = `${base}/f_auto,q_auto,w_600/${SITE.about}`;
+    aboutImg.srcset = `${base}/f_auto,q_auto,w_400/${SITE.about} 400w, ` +
+                      `${base}/f_auto,q_auto,w_600/${SITE.about} 600w, ` +
+                      `${base}/f_auto,q_auto,w_900/${SITE.about} 900w`;
+    aboutImg.sizes = '(max-width:600px) 62vw, (max-width:900px) 360px, 46vw';
+    aboutImg.loading = 'lazy';
+    aboutImg.decoding = 'async';
   }
 
   // Logó (nav, hero, footer)

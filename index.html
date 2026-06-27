@@ -3,7 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Botoscope</title>
+  <title>Botoscope – Fotózás Erdélyben | Portré, Esemény, Táj</title>
+
+  <!-- ── SEO ── -->
+  <meta name="description" content="Botoscope – Botos Kristóf fotós. Portré-, esemény- és tájfotózás természetes fénnyel, budget-barát áron. Foglalj időpontot a nyári szezonra!">
+  <link rel="canonical" href="https://susuelf.github.io/botoscopeph/">
+
+  <!-- Open Graph / megosztási kártyák -->
+  <meta property="og:type"        content="website">
+  <meta property="og:site_name"   content="Botoscope">
+  <meta property="og:title"       content="Botoscope – Pillanatok, örökre megörökítve">
+  <meta property="og:description" content="Portré-, esemény- és tájfotózás természetes fénnyel, budget-barát áron. Nézd meg a munkáimat és foglalj időpontot!">
+  <meta property="og:url"         content="https://susuelf.github.io/botoscopeph/">
+  <meta property="og:image"       content="https://res.cloudinary.com/dchgtjqbr/image/upload/q_auto,w_1200,h_630,c_fill,f_jpg/taj-4_cpq5ta">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale"      content="hu_HU">
+  <meta name="twitter:card"       content="summary_large_image">
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": "https://susuelf.github.io/botoscopeph/",
+    "name": "Botoscope",
+    "description": "Portré-, esemény- és tájfotózás természetes fénnyel.",
+    "url": "https://susuelf.github.io/botoscopeph/",
+    "image": "https://res.cloudinary.com/dchgtjqbr/image/upload/q_auto,w_1200,f_jpg/taj-4_cpq5ta",
+    "founder": { "@type": "Person", "name": "Botos Kristóf" },
+    "knowsAbout": ["portréfotózás", "eseményfotózás", "tájfotózás"],
+    "sameAs": [
+      "https://www.instagram.com/botoscope/",
+      "https://www.facebook.com/profile.php?id=61580925136185"
+    ]
+  }
+  </script>
+
+  <!-- Gyorsabb képbetöltés -->
+  <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
 
   <!-- Favicon (colored logo) -->
   <link rel="icon" href="images/favicon.ico" sizes="any">
@@ -22,8 +60,7 @@
     })();
   </script>
 
-  <!-- Flatpickr (date picker) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <!-- Flatpickr CSS + JS lazy betöltéssel érkezik (lásd lazyFlatpickr lent) -->
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -66,34 +103,44 @@
       --ease:        0.35s cubic-bezier(.4,0,.2,1);
     }
 
-    /* ─── Light theme overrides ─────────────────────────── */
+    /* ─── Light theme overrides — meleg pergamen ────────── */
     [data-theme="light"] {
       color-scheme: light;
-      --bg:          #f4f0e8;
-      --bg2:         #e9e3d6;
-      --blue:        #3c5d82;
-      --blue-l:      #4a6b8a;
-      --brown:       #7a5230;
-      --cream:       #2c2823;          /* body text (dark) */
-      --cream-d:     rgba(44,40,35,.62);
-      --white:       #1d1a16;          /* headings (near-black) */
-      --muted:       rgba(44,40,35,.42);
+      --bg:          #f7f0e1;
+      --bg2:         #efe5cf;
+      --blue:        #35587e;
+      --blue-l:      #44688e;
+      --brown:       #8a5a2e;
+      --cream:       #3a3128;          /* body text (meleg sötétbarna) */
+      --cream-d:     rgba(58,49,40,.68);
+      --white:       #241d15;          /* headings */
+      --muted:       rgba(58,49,40,.45);
 
-      --line:        rgba(44,40,35,.14);
-      --line-strong: rgba(44,40,35,.26);
-      --card-bg:     rgba(255,255,255,.55);
-      --nav-bg:      rgba(244,240,232,.9);
-      --band:        rgba(255,255,255,.5);
-      --footer-bg:   #e7e0d2;
+      --line:        rgba(122,82,48,.18);
+      --line-strong: rgba(122,82,48,.32);
+      --card-bg:     rgba(255,252,243,.72);
+      --nav-bg:      rgba(247,240,225,.92);
+      --band:        rgba(255,251,240,.55);
+      --footer-bg:   #ece1c8;
 
-      --hero-fade:   #efe9dd;
-      --canvas-bg:   #f4f0e8;
-      --canvas-fade: 244,240,232;
-      --star:        120,96,62;        /* warm dust on light */
-      --neb1:        rgba(74,107,138,.14);
-      --neb2:        rgba(122,82,48,.10);
-      --vignette:    rgba(150,135,110,.30);
+      --hero-fade:   #f3ebda;
+      --canvas-bg:   #f7f0e1;
+      --canvas-fade: 247,240,225;
+      --star:        122,90,52;        /* meleg por pergamenen */
+      --neb1:        rgba(68,104,142,.16);
+      --neb2:        rgba(138,90,46,.13);
+      --vignette:    rgba(160,130,90,.22);
+      --motif-alpha: 1.6;              /* motívumok erősebben látszanak */
+      --card-shadow: 0 12px 32px rgba(122,82,48,.10), 0 2px 8px rgba(122,82,48,.06);
     }
+    :root { --motif-alpha: 1; --card-shadow: none; }
+
+    /* pergamen: lágy meleg árnyékok a felületeken */
+    [data-theme="light"] .svc-card,
+    [data-theme="light"] .value-pill,
+    [data-theme="light"] .alb-card,
+    [data-theme="light"] .step-card { box-shadow:var(--card-shadow); }
+    [data-theme="light"] .gal-item { box-shadow:0 6px 18px rgba(122,82,48,.12); }
 
     /* ─── Reset ──────────────────────────────────────────── */
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
@@ -135,6 +182,13 @@
     .container { max-width:1160px; margin:0 auto; padding:0 24px; }
     section    { padding:100px 0; }
 
+    /* székelykapu-ív a szekciócímek fölött */
+    .sec-kapu {
+      display:block; margin:0 auto 16px; width:120px; height:34px;
+      color:var(--brown); opacity:.9;
+    }
+    .sec-kapu .k-blue { color:var(--blue-l); }
+
     .sec-eyebrow {
       text-align:center; font-size:.72rem; letter-spacing:.18em;
       text-transform:uppercase; color:var(--cream-d); margin-bottom:10px;
@@ -168,11 +222,11 @@
     }
     .divider::before { background:linear-gradient(90deg, transparent, var(--line-strong)); }
     .divider::after  { background:linear-gradient(90deg, var(--line-strong), transparent); }
-    .divider i {
-      flex:none; width:7px; height:7px; transform:rotate(45deg);
-      border:1px solid var(--blue-l);
-      box-shadow:0 0 0 4px rgba(74,107,138,.06);
+    .divider svg {
+      flex:none; width:150px; height:18px; color:var(--blue-l);
+      opacity:.85;
     }
+    .divider svg .dv-brown { color:var(--brown); }
 
     /* ─── Theme toggle ───────────────────────────────────── */
     .nav-right { margin-left:auto; display:flex; align-items:center; gap:22px; }
@@ -388,10 +442,13 @@
       transition:transform var(--ease), border-color var(--ease), background var(--ease);
       overflow:hidden;
     }
+    /* írásos hímzés jellegű tulipán-csík, hoverre "kihímződik" */
     .svc-card::before {
-      content:''; position:absolute; top:0; left:0; width:100%; height:2px;
-      background:linear-gradient(90deg,var(--blue),var(--brown));
-      transform:scaleX(0); transform-origin:left; transition:transform var(--ease);
+      content:''; position:absolute; top:6px; left:0; width:100%; height:11px;
+      background:linear-gradient(90deg,var(--blue-l),var(--brown));
+      -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='11'%3E%3Cpath d='M14 11 V6 M14 6 C11 6 10 1 12 1 C13 1 14 3.5 14 3.5 C14 3.5 15 1 16 1 C18 1 17 6 14 6 M4 11 Q4 7 0 7 M24 11 Q24 7 28 7' fill='none' stroke='%23000' stroke-width='1.4'/%3E%3C/svg%3E") repeat-x left center;
+      mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='11'%3E%3Cpath d='M14 11 V6 M14 6 C11 6 10 1 12 1 C13 1 14 3.5 14 3.5 C14 3.5 15 1 16 1 C18 1 17 6 14 6 M4 11 Q4 7 0 7 M24 11 Q24 7 28 7' fill='none' stroke='%23000' stroke-width='1.4'/%3E%3C/svg%3E") repeat-x left center;
+      transform:scaleX(0); transform-origin:left; transition:transform .7s ease;
     }
     .svc-card:hover {
       transform:translateY(-7px);
@@ -427,6 +484,36 @@
     /* ─────────────────────────────────────────────────────── */
     #gallery { background:transparent; position:relative; }
 
+    /* kiemelt sorozatok (albumok) */
+    .alb-grid {
+      display:grid; grid-template-columns:1fr 1fr; gap:22px;
+      margin:8px 0 64px;
+    }
+    .alb-card {
+      position:relative; cursor:pointer; overflow:hidden;
+      border:1px solid var(--line); background:var(--card-bg);
+      transition:transform var(--ease), border-color var(--ease);
+    }
+    .alb-card:hover { transform:translateY(-5px); border-color:rgba(74,107,138,.5); }
+    .alb-cover {
+      height:280px; background-size:cover; background-position:center;
+      transition:transform .7s ease;
+    }
+    .alb-card:hover .alb-cover { transform:scale(1.05); }
+    .alb-info { padding:20px 26px 22px; position:relative; }
+    .alb-info h3 {
+      font-family:var(--serif); font-size:1.55rem; font-weight:400;
+      color:var(--white); letter-spacing:.02em; margin-bottom:4px;
+    }
+    .alb-info p { font-size:.84rem; color:var(--cream-d); margin-bottom:12px; }
+    .alb-cta {
+      display:inline-flex; align-items:center; gap:8px;
+      font-size:.68rem; letter-spacing:.16em; text-transform:uppercase; color:var(--blue-l);
+    }
+    .alb-cta::after { content:'→'; transition:transform var(--ease); }
+    .alb-card:hover .alb-cta::after { transform:translateX(5px); }
+    @media (max-width:700px) { .alb-grid { grid-template-columns:1fr; } .alb-cover { height:210px; } }
+
     .filter-bar {
       display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:44px;
     }
@@ -449,7 +536,26 @@
       transition:opacity .4s, transform .4s;
     }
     .gal-item.hidden { display:none; }
-    .gal-item img { width:100%; height:auto; display:block; transition:transform .6s ease; }
+
+    /* forgó székely csillag, amíg a kép töltődik */
+    @keyframes kspin { to { transform:rotate(360deg); } }
+    .gal-item::before {
+      content:''; position:absolute; top:50%; left:50%; width:26px; height:26px;
+      margin:-13px 0 0 -13px; z-index:1; opacity:0; pointer-events:none;
+      background:var(--blue-l);
+      -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M12 0 L14.2 7.2 L20.5 3.5 L16.8 9.8 L24 12 L16.8 14.2 L20.5 20.5 L14.2 16.8 L12 24 L9.8 16.8 L3.5 20.5 L7.2 14.2 L0 12 L7.2 9.8 L3.5 3.5 L9.8 7.2 Z' fill='%23000'/%3E%3C/svg%3E") center/contain no-repeat;
+      mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M12 0 L14.2 7.2 L20.5 3.5 L16.8 9.8 L24 12 L16.8 14.2 L20.5 20.5 L14.2 16.8 L12 24 L9.8 16.8 L3.5 20.5 L7.2 14.2 L0 12 L7.2 9.8 L3.5 3.5 L9.8 7.2 Z' fill='%23000'/%3E%3C/svg%3E") center/contain no-repeat;
+      animation:kspin 1.6s linear infinite;
+      transition:opacity .3s ease;
+    }
+    .gal-item:has(img:not(.ld))::before { opacity:.75; }
+
+    .gal-item img {
+      width:100%; height:auto; display:block;
+      opacity:0;                                  /* blur-up: LQIP háttér látszik először */
+      transition:transform .6s ease, opacity .5s ease;
+    }
+    .gal-item img.ld { opacity:1; }
 
     /* Elegáns belső keret — klasszikus fotópaszpartu-effekt */
     .gal-item::after {
@@ -475,6 +581,24 @@
     }
     .gal-item:hover .gal-icon { opacity:1; transform:scale(1); }
 
+    /* hover-felirat kategória-akcentussal */
+    .gal-cap {
+      position:absolute; left:0; right:0; bottom:0; z-index:2;
+      display:flex; align-items:center; gap:10px;
+      padding:26px 18px 13px;
+      background:linear-gradient(to top, rgba(8,8,10,.72), transparent);
+      color:#f5f5f5; font-size:.66rem; letter-spacing:.16em; text-transform:uppercase;
+      opacity:0; transform:translateY(8px);
+      transition:opacity var(--ease), transform var(--ease);
+      pointer-events:none;
+    }
+    .gal-cap::before {
+      content:''; flex:none; width:18px; height:2px;
+      background:var(--cap, var(--blue-l));
+    }
+    .gal-cap b { font-weight:500; letter-spacing:.1em; }
+    .gal-item:hover .gal-cap { opacity:1; transform:none; }
+
     .gal-more { text-align:center; margin-top:44px; }
     .gal-more p { color:var(--cream-d); font-size:.84rem; margin-bottom:22px; }
     .gal-social { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
@@ -499,7 +623,19 @@
       align-items:center; justify-content:center;
     }
     #lightbox.open { display:flex; }
-    #lb-img { max-width:90vw; max-height:88vh; object-fit:contain; }
+    /* hímzés-szegély a vetítés tetején-alján */
+    #lightbox::before, #lightbox::after {
+      content:''; position:absolute; left:0; right:0; height:7px;
+      background:var(--blue-l); opacity:.55; pointer-events:none;
+      -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='8'%3E%3Cpath d='M0 8 L8 1 L16 8' fill='none' stroke='%23000' stroke-width='1.6'/%3E%3C/svg%3E") repeat-x;
+      mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='8'%3E%3Cpath d='M0 8 L8 1 L16 8' fill='none' stroke='%23000' stroke-width='1.6'/%3E%3C/svg%3E") repeat-x;
+    }
+    #lightbox::before { top:10px; }
+    #lightbox::after  { bottom:10px; transform:scaleY(-1); }
+    #lb-img {
+      max-width:90vw; max-height:84vh; object-fit:contain;
+      border:1px solid rgba(237,224,196,.3);
+    }
     .lb-close {
       position:absolute; top:20px; right:28px;
       font-size:2.2rem; line-height:1;
@@ -517,6 +653,14 @@
     .lb-nav:hover { background:var(--blue); border-color:var(--blue); }
     .lb-prev { left:20px; }
     .lb-next { right:20px; }
+    .lb-count {
+      position:absolute; bottom:22px; left:50%; transform:translateX(-50%);
+      font-size:.72rem; letter-spacing:.2em; color:rgba(245,245,245,.65);
+    }
+    #lb-img { touch-action:pan-y; }   /* vízszintes swipe a navigációé */
+    @media (max-width:600px) {
+      .lb-nav { display:none; }       /* mobilon swipe-pal lapozunk */
+    }
 
     /* ─────────────────────────────────────────────────────── */
     /*  ABOUT                                                  */
@@ -536,6 +680,12 @@
     }
     .about-img-wrap { position:relative; }
     .about-img-wrap img { height:540px; object-fit:cover; filter:grayscale(15%); }
+    /* életfa sarokdísz a kék kereten */
+    .corner-tree {
+      position:absolute; top:-30px; left:-30px; width:48px; height:48px;
+      color:var(--brown); z-index:1;
+    }
+    .corner-tree .k-blue { color:var(--blue-l); }
     .about-img-wrap::before {
       content:''; position:absolute;
       top:-14px; left:-14px; right:14px; bottom:14px;
@@ -546,6 +696,35 @@
       font-weight:300; color:var(--white); margin-bottom:22px; line-height:1.25;
     }
     .about-text p { color:var(--cream-d); font-size:.93rem; line-height:1.85; margin-bottom:14px; }
+
+    /* ─────────────────────────────────────────────────────── */
+    /*  FOLYAMAT — Az út a képig                               */
+    /* ─────────────────────────────────────────────────────── */
+    #folyamat { background:transparent; }
+    .step-grid {
+      display:grid; grid-template-columns:repeat(4,1fr); gap:22px; position:relative;
+    }
+    .step-grid::before {
+      content:''; position:absolute; top:33px; left:9%; right:9%; height:1px;
+      background:linear-gradient(90deg, transparent, var(--line-strong) 15%, var(--line-strong) 85%, transparent);
+    }
+    .step-card { text-align:center; padding:0 12px; position:relative; }
+    .step-num { position:relative; width:66px; height:66px; margin:0 auto 20px; }
+    .step-num svg { position:absolute; inset:0; width:100%; height:100%; color:var(--blue-l); }
+    .step-num svg path { fill:var(--canvas-bg); stroke:currentColor; stroke-width:1.4; transition:fill .45s ease; }
+    .step-num b {
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+      font-family:var(--serif); font-size:1.45rem; font-weight:400; color:var(--white);
+    }
+    .step-card h3 {
+      font-family:var(--serif); font-size:1.35rem; font-weight:400;
+      color:var(--white); margin-bottom:10px; letter-spacing:.02em;
+    }
+    .step-card p { font-size:.85rem; line-height:1.75; color:var(--cream-d); }
+    @media (max-width:900px) {
+      .step-grid { grid-template-columns:1fr 1fr; row-gap:40px; }
+      .step-grid::before { display:none; }
+    }
 
     /* ─────────────────────────────────────────────────────── */
     /*  BOOKING                                                */
@@ -580,6 +759,13 @@
     }
     .btn-submit:hover { background:var(--blue-l); }
     .btn-submit:disabled { opacity:.5; cursor:default; }
+    .btn-submit.sending::after {
+      content:''; display:inline-block; width:13px; height:13px;
+      margin-left:10px; vertical-align:-2px; background:#fff;
+      -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M12 0 L14.2 7.2 L20.5 3.5 L16.8 9.8 L24 12 L16.8 14.2 L20.5 20.5 L14.2 16.8 L12 24 L9.8 16.8 L3.5 20.5 L7.2 14.2 L0 12 L7.2 9.8 L3.5 3.5 L9.8 7.2 Z' fill='%23000'/%3E%3C/svg%3E") center/contain no-repeat;
+      mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M12 0 L14.2 7.2 L20.5 3.5 L16.8 9.8 L24 12 L16.8 14.2 L20.5 20.5 L14.2 16.8 L12 24 L9.8 16.8 L3.5 20.5 L7.2 14.2 L0 12 L7.2 9.8 L3.5 3.5 L9.8 7.2 Z' fill='%23000'/%3E%3C/svg%3E") center/contain no-repeat;
+      animation:kspin 1.2s linear infinite;
+    }
     .form-note { font-size:.73rem; color:var(--cream-d); text-align:center; margin-top:14px; }
 
     #formSuccess {
@@ -626,6 +812,11 @@
     }
     .s-link:hover { border-color:var(--blue); color:var(--blue-l); background:rgba(74,107,138,.1); }
     .f-email { font-size:.78rem; color:var(--cream-d); }
+    .f-tree {
+      display:block; margin:34px auto 14px; width:46px; height:42px;
+      color:var(--brown); opacity:.8;
+    }
+    .f-tree .k-blue { color:var(--blue-l); }
     .footer-bottom {
       text-align:center; padding-top:28px;
       border-top:1px solid var(--line);
@@ -672,6 +863,7 @@
 
       /* ── Galéria: keret elrejtése carousel-ben (object-fit:contain miatt nem igazodik a képhez) ── */
       .gal-item::after { display:none; }
+      .gal-cap { display:none; }   /* mobilon nincs hover */
 
       /* ── Bemutatkozó kép mobilon ── */
       .about-grid { gap:28px; }
@@ -766,13 +958,13 @@
   <div class="hero-content">
     <img src="images/logo-mark.png" alt="Botoscope" class="hero-logo">
     <h1 class="hero-title">Botoscope</h1>
-    <p class="hero-tagline">Pillanatok, örökre megörökítve</p>
+    <p class="hero-tagline">Erőst szép pillanatok — örökre megfogva</p>
     <div class="hero-cta">
-      <a href="#gallery" class="btn btn-primary">Munkáim</a>
-      <a href="#booking" class="btn btn-outline">Foglalj időpontot</a>
+      <a href="#gallery" class="btn btn-primary">Nézzed a munkáim</a>
+      <a href="#booking" class="btn btn-outline">Foglalj üdőpontot</a>
     </div>
   </div>
-  <div class="hero-scroll">Scroll</div>
+  <div class="hero-scroll">Gyere lennebb</div>
 </section>
 
 <!-- ══════════════════════ INTRO ══════════════════════ -->
@@ -780,19 +972,20 @@
   <div class="container">
     <div class="intro-mark fi"></div>
     <p class="intro-statement fi">
-      Minden kép egy <em>történet</em> — a tiéd. Az én feladatom, hogy
-      úgy őrizzem meg, ahogy átélted: <em>őszintén</em> és időtállóan.
+      Minden kép egy <em>történet</em> — a tiéd. Én úgy őrzöm meg,
+      ahogy megesett: <em>igazán</em> s időtállón.
     </p>
     <p class="intro-sub fi">
-      Természetes fény, nyugodt tempó és valódi pillanatok. Nem pózolt
-      mosolyok — hanem az a fajta emlék, amihez évek múlva is visszatérsz.
+      Természetes fény, nyugodt tempó s valódi pillanatok. Nem pózolt
+      mosolyok — hanem az a fajta emlék, amihez esztendők múlva es
+      jólesik visszatérni.
     </p>
     <div class="value-strip fi">
       <div class="value-pill">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
         </svg>
-        Pályakezdő lelkesedéssel
+        Fiatalos lendülettel
       </div>
       <div class="value-pill">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
@@ -826,8 +1019,19 @@
 <!-- ═════════════════════ SERVICES ════════════════════ -->
 <section id="services">
   <div class="container">
+    <svg class="sec-kapu fi" viewBox="0 0 120 34" fill="none" aria-hidden="true">
+      <path d="M14 32 V13 M106 32 V13" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M10 13 H18 M102 13 H110" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M14 13 Q60 -8 106 13" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M22 15 Q60 -2 98 15" stroke="currentColor" stroke-width="1" opacity=".55"/>
+      <g class="k-blue">
+        <path d="M60 2 L63 7 L60 12 L57 7 Z" fill="currentColor"/>
+        <circle cx="38" cy="8.5" r="1.4" fill="currentColor"/>
+        <circle cx="82" cy="8.5" r="1.4" fill="currentColor"/>
+      </g>
+    </svg>
     <p class="sec-eyebrow fi">Szolgáltatások</p>
-    <h2 class="sec-title fi">Amit kínálok</h2>
+    <h2 class="sec-title fi">Ezt tudom adni</h2>
 
     <div class="svc-grid">
       <article class="svc-card fi">
@@ -840,7 +1044,7 @@
         </div>
         <h3>Portré</h3>
         <p>Egyéni, páros és családi portrék, amelyek a karaktert és a hangulatot tükrözik — a kedvenc helyszíneden.</p>
-        <a href="#booking" class="svc-meta">Egyeztetés</a>
+        <a href="#booking" class="svc-meta">Beszéljük meg</a>
       </article>
 
       <article class="svc-card fi">
@@ -852,7 +1056,7 @@
         </div>
         <h3>Esemény</h3>
         <p>A nagy nap minden rezdülése — az előkészülettől az utolsó táncig. Riportszerű, természetes megközelítéssel.</p>
-        <a href="#booking" class="svc-meta">Egyeztetés</a>
+        <a href="#booking" class="svc-meta">Beszéljük meg</a>
       </article>
 
       <article class="svc-card fi">
@@ -865,7 +1069,7 @@
         </div>
         <h3>Táj &amp; Természet</h3>
         <p>Csendes, atmoszférikus tájképek a fény legszebb óráiban — fali nyomatként vagy egyedi ajándékként is.</p>
-        <a href="#booking" class="svc-meta">Egyeztetés</a>
+        <a href="#booking" class="svc-meta">Beszéljük meg</a>
       </article>
 
       <article class="svc-card fi">
@@ -880,19 +1084,46 @@
         </div>
         <h3>Segítő fotós</h3>
         <p>Nagyobb eseményekre magammal hozhatok egy segítő személyt — aki háttérben dolgozik, vagy egy különálló <em>fotósarokban</em> varázsolja megörökíthetővé a pillanatokat.</p>
-        <a href="#booking" class="svc-meta">Egyeztetés</a>
+        <a href="#booking" class="svc-meta">Beszéljük meg</a>
       </article>
     </div>
   </div>
 </section>
 
-<div class="divider"><i></i></div>
+<div class="divider" aria-hidden="true">
+  <svg viewBox="0 0 150 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 13 L13 6 L22 13 L31 6 L40 13" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+    <path d="M110 13 L119 6 L128 13 L137 6 L146 13" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+    <circle cx="52" cy="9.5" r="1.6" fill="currentColor"/>
+    <circle cx="98" cy="9.5" r="1.6" fill="currentColor"/>
+    <g class="dv-brown" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round">
+      <path d="M75 2.5 L82 9.5 L75 16.5 L68 9.5 Z"/>
+    </g>
+    <circle cx="75" cy="9.5" r="1.7" fill="currentColor"/>
+  </svg>
+</div>
 
 <!-- ══════════════════════ GALLERY ════════════════════ -->
 <section id="gallery">
   <div class="container">
-    <p class="sec-eyebrow fi">Portfolio</p>
-    <h2 class="sec-title fi">Munkáim</h2>
+    <svg class="sec-kapu fi" viewBox="0 0 120 34" fill="none" aria-hidden="true">
+      <path d="M14 32 V13 M106 32 V13" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M10 13 H18 M102 13 H110" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M14 13 Q60 -8 106 13" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M22 15 Q60 -2 98 15" stroke="currentColor" stroke-width="1" opacity=".55"/>
+      <g class="k-blue">
+        <path d="M60 2 L63 7 L60 12 L57 7 Z" fill="currentColor"/>
+        <circle cx="38" cy="8.5" r="1.4" fill="currentColor"/>
+        <circle cx="82" cy="8.5" r="1.4" fill="currentColor"/>
+      </g>
+    </svg>
+    <p class="sec-eyebrow fi">Portfolió</p>
+    <h2 class="sec-title fi">Nézzed meg a munkáim</h2>
+
+    <p class="sec-eyebrow fi" style="margin-top:8px;">Kiemelt sorozatok · Történetek képekben</p>
+    <div class="alb-grid" id="albGrid">
+      <!-- gallery.js tölti fel az albumokat -->
+    </div>
 
     <div class="filter-bar fi">
       <button class="ftab active" data-f="portrait">Portré</button>
@@ -905,7 +1136,7 @@
     </div><!-- /gal-grid -->
 
     <div class="gal-more fi">
-      <p>További munkáimat a közösségi oldalaimon láthatod — kövess, hogy ne maradj le az újdonságokról!</p>
+      <p>Többet es találsz a közösségi oldalaimon — kövess bé, s nem maradsz le semmiről!</p>
       <!-- ← Cseréld le a href-eket a saját Instagram / Facebook oldaladra -->
       <div class="gal-social">
         <a href="https://www.instagram.com/botoscope/" target="_blank" rel="noopener" class="gs-ig" aria-label="Instagram – további képek">
@@ -916,7 +1147,7 @@
           </svg>
           Instagram
         </a>
-        <a href="https://www.facebook.com/profile.php?id=61580925136185&sk=about" target="_blank" rel="noopener" class="gs-fb" aria-label="Facebook – további képek">
+        <a href="https://www.facebook.com/profile.php?id=61580925136185" target="_blank" rel="noopener" class="gs-fb" aria-label="Facebook – további képek">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
           </svg>
@@ -933,9 +1164,21 @@
   <button class="lb-nav lb-prev" onclick="lbNav(-1)">‹</button>
   <img id="lb-img" src="" alt="Fotó">
   <button class="lb-nav lb-next" onclick="lbNav(1)">›</button>
+  <div class="lb-count" id="lbCount"></div>
 </div>
 
-<div class="divider"><i></i></div>
+<div class="divider" aria-hidden="true">
+  <svg viewBox="0 0 150 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 13 L13 6 L22 13 L31 6 L40 13" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+    <path d="M110 13 L119 6 L128 13 L137 6 L146 13" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+    <circle cx="52" cy="9.5" r="1.6" fill="currentColor"/>
+    <circle cx="98" cy="9.5" r="1.6" fill="currentColor"/>
+    <g class="dv-brown" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round">
+      <path d="M75 2.5 L82 9.5 L75 16.5 L68 9.5 Z"/>
+    </g>
+    <circle cx="75" cy="9.5" r="1.7" fill="currentColor"/>
+  </svg>
+</div>
 
 <!-- ════════════════════ ABOUT ════════════════════════ -->
 <section id="about">
@@ -943,12 +1186,20 @@
     <div class="about-grid">
 
       <div class="about-img-wrap fi">
+        <svg class="corner-tree" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <path d="M4 46 V12 Q4 4 12 4 H46" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M14 14 L26 26 M26 26 Q22 20 28 18 M26 26 Q20 22 18 28" stroke="currentColor" stroke-width="1.3"/>
+          <g class="k-blue">
+            <path d="M30 30 C27 30 26 25 28 25 C29 25 30 27.5 30 27.5 C30 27.5 31 25 32 25 C34 25 33 30 30 30 Z" stroke="currentColor" stroke-width="1.3"/>
+            <circle cx="14" cy="14" r="1.6" fill="currentColor"/>
+          </g>
+        </svg>
         <!-- ← Cseréld le a saját fotódra: images/about.jpg -->
         <img src="images/self.jpg" alt="Botos Kristóf">
       </div>
 
       <div class="about-text fi">
-        <h2>Szia, Kristóf vagyok.</h2>
+        <h2>Szia! Kristóf vagyok.</h2>
         <p>
           A fényképezés számomra több mint szakma – lehetőség arra, hogy megörökítsem azokat a
           pillanatokat, amelyek valóban számítanak. Egy esküvő intim másodpercei, egy portré mögötti
@@ -969,13 +1220,102 @@
   </div>
 </section>
 
-<div class="divider"><i></i></div>
+<div class="divider" aria-hidden="true">
+  <svg viewBox="0 0 150 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 13 L13 6 L22 13 L31 6 L40 13" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+    <path d="M110 13 L119 6 L128 13 L137 6 L146 13" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+    <circle cx="52" cy="9.5" r="1.6" fill="currentColor"/>
+    <circle cx="98" cy="9.5" r="1.6" fill="currentColor"/>
+    <g class="dv-brown" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round">
+      <path d="M75 2.5 L82 9.5 L75 16.5 L68 9.5 Z"/>
+    </g>
+    <circle cx="75" cy="9.5" r="1.7" fill="currentColor"/>
+  </svg>
+</div>
+
+<!-- ═══════════════════ FOLYAMAT ══════════════════════ -->
+<section id="folyamat">
+  <div class="container">
+    <svg class="sec-kapu fi" viewBox="0 0 120 34" fill="none" aria-hidden="true">
+      <path d="M14 32 V13 M106 32 V13" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M10 13 H18 M102 13 H110" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M14 13 Q60 -8 106 13" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M22 15 Q60 -2 98 15" stroke="currentColor" stroke-width="1" opacity=".55"/>
+      <g class="k-blue">
+        <path d="M60 2 L63 7 L60 12 L57 7 Z" fill="currentColor"/>
+        <circle cx="38" cy="8.5" r="1.4" fill="currentColor"/>
+        <circle cx="82" cy="8.5" r="1.4" fill="currentColor"/>
+      </g>
+    </svg>
+    <p class="sec-eyebrow fi">Hogyan dolgozom</p>
+    <h2 class="sec-title fi">Az út a képig</h2>
+
+    <div class="step-grid">
+      <div class="step-card fi">
+        <div class="step-num">
+          <svg viewBox="0 0 66 66" aria-hidden="true"><path d="M64 33 L51.5 40.7 L54.9 54.9 L40.7 51.5 L33 64 L25.3 51.5 L11.1 54.9 L14.5 40.7 L2 33 L14.5 25.3 L11.1 11.1 L25.3 14.5 L33 2 L40.7 14.5 L54.9 11.1 L51.5 25.3 Z"/></svg>
+          <b>1</b>
+        </div>
+        <h3>Szót értünk</h3>
+        <p>Megírod, mit szeretnél — helyszín, hangulat, időpont. Hamarost válaszolok, s mindent szépen megbeszélünk.</p>
+      </div>
+      <div class="step-card fi">
+        <div class="step-num">
+          <svg viewBox="0 0 66 66" aria-hidden="true"><path d="M64 33 L51.5 40.7 L54.9 54.9 L40.7 51.5 L33 64 L25.3 51.5 L11.1 54.9 L14.5 40.7 L2 33 L14.5 25.3 L11.1 11.1 L25.3 14.5 L33 2 L40.7 14.5 L54.9 11.1 L51.5 25.3 Z"/></svg>
+          <b>2</b>
+        </div>
+        <h3>Megörökítjük</h3>
+        <p>Nyugodt tempóban fotózunk, pózolgatás nélkül — úgy, ahogy a pillanat hozza. Meglátod, nem fáj.</p>
+      </div>
+      <div class="step-card fi">
+        <div class="step-num">
+          <svg viewBox="0 0 66 66" aria-hidden="true"><path d="M64 33 L51.5 40.7 L54.9 54.9 L40.7 51.5 L33 64 L25.3 51.5 L11.1 54.9 L14.5 40.7 L2 33 L14.5 25.3 L11.1 11.1 L25.3 14.5 L33 2 L40.7 14.5 L54.9 11.1 L51.5 25.3 Z"/></svg>
+          <b>3</b>
+        </div>
+        <h3>Megválogatom</h3>
+        <p>A képek legjavát gondosan kiválogatom s megszerkesztem — hogy mind a helyén legyen, ahogy illik.</p>
+      </div>
+      <div class="step-card fi">
+        <div class="step-num">
+          <svg viewBox="0 0 66 66" aria-hidden="true"><path d="M64 33 L51.5 40.7 L54.9 54.9 L40.7 51.5 L33 64 L25.3 51.5 L11.1 54.9 L14.5 40.7 L2 33 L14.5 25.3 L11.1 11.1 L25.3 14.5 L33 2 L40.7 14.5 L54.9 11.1 L51.5 25.3 Z"/></svg>
+          <b>4</b>
+        </div>
+        <h3>Átaladom</h3>
+        <p>Egy-két héten belül megkapod a képeid, letölthetően.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider" aria-hidden="true">
+  <svg viewBox="0 0 150 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 13 L13 6 L22 13 L31 6 L40 13" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+    <path d="M110 13 L119 6 L128 13 L137 6 L146 13" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+    <circle cx="52" cy="9.5" r="1.6" fill="currentColor"/>
+    <circle cx="98" cy="9.5" r="1.6" fill="currentColor"/>
+    <g class="dv-brown" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round">
+      <path d="M75 2.5 L82 9.5 L75 16.5 L68 9.5 Z"/>
+    </g>
+    <circle cx="75" cy="9.5" r="1.7" fill="currentColor"/>
+  </svg>
+</div>
 
 <!-- ════════════════════ BOOKING ══════════════════════ -->
 <section id="booking">
   <div class="container">
-    <p class="sec-eyebrow fi">Időpontfoglalás</p>
-    <h2 class="sec-title fi">Dolgozzunk együtt</h2>
+    <svg class="sec-kapu fi" viewBox="0 0 120 34" fill="none" aria-hidden="true">
+      <path d="M14 32 V13 M106 32 V13" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M10 13 H18 M102 13 H110" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M14 13 Q60 -8 106 13" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M22 15 Q60 -2 98 15" stroke="currentColor" stroke-width="1" opacity=".55"/>
+      <g class="k-blue">
+        <path d="M60 2 L63 7 L60 12 L57 7 Z" fill="currentColor"/>
+        <circle cx="38" cy="8.5" r="1.4" fill="currentColor"/>
+        <circle cx="82" cy="8.5" r="1.4" fill="currentColor"/>
+      </g>
+    </svg>
+    <p class="sec-eyebrow fi">Üdőpontfoglalás</p>
+    <h2 class="sec-title fi">Fogjunk össze</h2>
 
     <div class="form-wrap fi">
       <!--
@@ -1033,15 +1373,15 @@
         </div>
 
         <div class="form-submit">
-          <button type="submit" class="btn-submit">Kérelem elküldése</button>
+          <button type="submit" class="btn-submit">Indítsd útnak</button>
           <p class="form-note">* 24–48 órán belül visszajelzek emailben a részletekkel.</p>
         </div>
       </form>
 
       <div id="formSuccess">
         <div class="s-icon">📷</div>
-        <h3>Köszönöm a megkeresést!</h3>
-        <p>Üzeneted megkaptam. 24–48 órán belül visszajelzek emailben.</p>
+        <h3>Megjött a híred!</h3>
+        <p>Köszönöm szépen. 24–48 órán belül jelentkezem emailben — addig es minden jót!</p>
       </div>
     </div>
   </div>
@@ -1057,7 +1397,7 @@
           <img src="images/logo-mark.png" alt="Botoscope">
           Botoscope
         </div>
-        <p class="f-tagline">Pillanatok, örökre megörökítve.<br>Portré · Esemény · Táj</p>
+        <p class="f-tagline">Erőst szép pillanatok — örökre megfogva.<br>Portré · Esemény · Táj</p>
       </div>
 
       <nav class="f-nav">
@@ -1076,18 +1416,24 @@
               <circle cx="17.5" cy="6.5" r=".9" fill="currentColor" stroke="none"/>
             </svg>
           </a>
-          <a href="https://www.facebook.com/profile.php?id=61580925136185&sk=about" target="_blank" class="s-link" aria-label="Facebook">
+          <a href="https://www.facebook.com/profile.php?id=61580925136185" target="_blank" class="s-link" aria-label="Facebook">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
             </svg>
           </a>
         </div>
         <!-- ← Cseréld le a saját emailedre -->
-        <p class="f-email">botoscopeph@email.com</p>
+        <p class="f-email">botoscopeph@gmail.com</p>
       </div>
 
     </div>
-    <div class="footer-bottom">© 2025 Botoscope · Minden jog fenntartva</div>
+    <svg class="f-tree" viewBox="0 0 46 42" fill="none" aria-hidden="true">
+      <path d="M23 42 V14" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M23 34 Q14 32 10 38 M23 34 Q32 32 36 38 M23 24 Q15 22 12 27 M23 24 Q31 22 34 27" stroke="currentColor" stroke-width="1.2"/>
+      <path class="k-blue" d="M23 14 C19 14 18 7 21 7 C22 7 23 10 23 10 C23 10 24 7 25 7 C28 7 27 14 23 14 Z" stroke="currentColor" stroke-width="1.3"/>
+      <circle class="k-blue" cx="23" cy="3" r="1.6" fill="currentColor"/>
+    </svg>
+    <div class="footer-bottom">© 2026 Botoscope · Minden jog fenntartva</div>
   </div>
 </footer>
 
@@ -1096,31 +1442,38 @@
 <!-- ── Cloudinary galéria adatok ─────────────────────── -->
 <script src="gallery.js"></script>
 
-<!-- ── Animated starfield background ─────────────────── -->
+<!-- ── Logó-motívumos animált háttér ─────────────────── -->
 <script>
 (function () {
   const canvas = document.getElementById('bgCanvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const mobile = Math.min(window.innerWidth, window.innerHeight) < 700;
 
   /* ── Tweakables ── */
-  const COUNT    = 300;        // hány csillag
-  const SPEED    = 0.32;       // utazási sebesség (kisebb = lágyabb)
-  const MAXDEPTH = 1500;
+  const N_MOTIF = mobile ? 9 : 16;    // logó-motívumok száma
+  const N_DUST  = mobile ? 40 : 90;   // apró "csillagpor" pontok
+  const FPS     = 30;                 // képkocka-korlát (akku-kímélés)
+  const FRAME_MS = 1000 / FPS;
 
-  /* a színek az aktív témából (CSS változók) jönnek */
+  /* színek az aktív témából */
   function readColors() {
     const cs = getComputedStyle(document.documentElement);
+    const v = n => cs.getPropertyValue(n).trim();
     return {
-      star: cs.getPropertyValue('--star').trim()        || '237,224,196',
-      bg:   cs.getPropertyValue('--canvas-bg').trim()   || '#0a0a0f',
-      fade: cs.getPropertyValue('--canvas-fade').trim() || '10,10,15',
+      bg:    v('--canvas-bg') || '#0a0a0f',
+      star:  v('--star')      || '237,224,196',
+      blue:  v('--blue-l')    || '#6a8fad',
+      brown: v('--brown')     || '#7a5230',
+      cream: 'rgb(' + (v('--star') || '237,224,196') + ')',
+      alpha: parseFloat(v('--motif-alpha')) || 1,
     };
   }
   let COL = readColors();
+  const motifColor = i => [COL.cream, COL.blue, COL.brown][i % 3];
 
-  let width, height, dpr, stars = [], tick = 0, raf = null;
+  let width, height, dpr, motifs = [], dust = [], raf = null, last = 0, tick = 0;
 
   function resize() {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -1131,62 +1484,145 @@
     canvas.style.width  = width  + 'px';
     canvas.style.height = height + 'px';
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = COL.bg;
-    ctx.fillRect(0, 0, width, height);
   }
 
-  function makeStar(z) {
+  /* ── Motívum-rajzolók (a logó elemei) ── */
+  function drawSun(s) {                      // sugaras nap
+    const r = s.size * 0.45;
+    ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath();
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * Math.PI * 2;
+      ctx.moveTo(Math.cos(a) * r * 1.35, Math.sin(a) * r * 1.35);
+      ctx.lineTo(Math.cos(a) * s.size,   Math.sin(a) * s.size);
+    }
+    ctx.stroke();
+  }
+  function drawMoon(s) {                     // holdsarló
+    const r = s.size;
+    ctx.beginPath();
+    ctx.arc(0, 0, r, Math.PI * 0.32, Math.PI * 1.68);
+    ctx.arc(r * 0.55, 0, r * 0.72, Math.PI * 1.6, Math.PI * 0.4, true);
+    ctx.closePath(); ctx.fill();
+  }
+  function drawStar8(s) {                    // nyolcágú csillag
+    const R = s.size, r = s.size * 0.42;
+    ctx.beginPath();
+    for (let i = 0; i < 16; i++) {
+      const a = (i / 16) * Math.PI * 2;
+      const d = i % 2 === 0 ? R : r;
+      ctx[i === 0 ? 'moveTo' : 'lineTo'](Math.cos(a) * d, Math.sin(a) * d);
+    }
+    ctx.closePath(); ctx.fill();
+  }
+  function drawFir(s) {                      // fenyőág / búzakalász
+    const h = s.size * 1.4;
+    ctx.beginPath();
+    ctx.moveTo(0, -h); ctx.lineTo(0, h);
+    for (let i = -2; i <= 2; i++) {
+      const y = i * h * 0.38;
+      ctx.moveTo(0, y); ctx.lineTo(-s.size * 0.55, y + h * 0.3);
+      ctx.moveTo(0, y); ctx.lineTo( s.size * 0.55, y + h * 0.3);
+    }
+    ctx.stroke();
+  }
+  function drawDiamond(s) {                  // rombusz (elválasztó-motívum)
+    ctx.beginPath();
+    ctx.moveTo(0, -s.size); ctx.lineTo(s.size, 0);
+    ctx.lineTo(0, s.size);  ctx.lineTo(-s.size, 0);
+    ctx.closePath(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, s.size * 0.18, 0, Math.PI * 2); ctx.fill();
+  }
+  function drawZigzag(s) {                   // lencsegyűrű zigzag mintája
+    const w = s.size, n = 4;
+    ctx.beginPath();
+    for (let i = 0; i <= n * 2; i++) {
+      const x = -w + (i / (n * 2)) * w * 2;
+      const y = i % 2 === 0 ? s.size * 0.4 : -s.size * 0.4;
+      ctx[i === 0 ? 'moveTo' : 'lineTo'](x, y);
+    }
+    ctx.stroke();
+  }
+  const DRAW = [drawSun, drawMoon, drawStar8, drawFir, drawDiamond, drawZigzag];
+
+  function makeMotif(i) {
     return {
-      x: (Math.random() - 0.5) * width  * 2,
-      y: (Math.random() - 0.5) * height * 2,
-      z: z == null ? Math.random() * MAXDEPTH : z,
-      ts: Math.random() * 0.02 + 0.01,
-      to: Math.random() * Math.PI * 2,
+      type: i % DRAW.length,                          // egyenletes eloszlás
+      x: Math.random() * width,
+      y: Math.random() * height,
+      size: 9 + Math.random() * 16,
+      depth: 0.25 + Math.random() * 0.75,             // parallax-réteg
+      rot: Math.random() * Math.PI * 2,
+      rs: (Math.random() - 0.5) * 0.003,              // lassú forgás
+      vy: -(0.05 + Math.random() * 0.12),             // lassú felfelé sodródás
+      vx: (Math.random() - 0.5) * 0.06,
+      phase: Math.random() * Math.PI * 2,
+      ps: 0.008 + Math.random() * 0.012,              // pulzálás sebessége
+      ci: i,                                          // szín-index
     };
   }
-  function seed() { stars = Array.from({ length: COUNT }, () => makeStar()); }
-
-  function drawStar(s, animate) {
-    const scale = 400 / s.z;
-    const x = width  / 2 + s.x * scale;
-    const y = height / 2 + s.y * scale;
-    if (x < -10 || x > width + 10 || y < -10 || y > height + 10) return;
-    const size = Math.max(0.5, (1 - s.z / MAXDEPTH) * 2.4);
-    let op = (1 - s.z / MAXDEPTH) * 0.8 + 0.1;
-    if (animate && s.ts > 0.015) op *= 0.7 + 0.3 * Math.sin(tick * s.ts + s.to);
-    ctx.beginPath();
-    ctx.arc(x, y, size, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(' + COL.star + ',1)';
-    ctx.globalAlpha = op;
-    ctx.fill();
-    if (s.z < MAXDEPTH * 0.3) {
-      const len = (1 - s.z / MAXDEPTH) * SPEED * 8;
-      const a = Math.atan2(s.y, s.x);
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-      ctx.lineTo(x - Math.cos(a) * len, y - Math.sin(a) * len);
-      ctx.strokeStyle = 'rgba(' + COL.star + ',1)';
-      ctx.globalAlpha = op * 0.3;
-      ctx.lineWidth = size * 0.5;
-      ctx.stroke();
-    }
+  function makeDust() {
+    return {
+      x: Math.random() * width,
+      y: Math.random() * height,
+      size: 0.4 + Math.random() * 1.3,
+      depth: 0.2 + Math.random() * 0.8,
+      phase: Math.random() * Math.PI * 2,
+      ps: 0.01 + Math.random() * 0.02,
+    };
+  }
+  function seed() {
+    motifs = Array.from({ length: N_MOTIF }, (_, i) => makeMotif(i));
+    dust   = Array.from({ length: N_DUST  }, makeDust);
   }
 
-  function frame() {
-    tick++;
-    ctx.fillStyle = 'rgba(' + COL.fade + ',0.2)';   // halvány csóva-elhalványulás
+  function draw(animate) {
+    ctx.fillStyle = COL.bg;
     ctx.fillRect(0, 0, width, height);
-    for (const s of stars) {
-      s.z -= SPEED * 2;
-      if (s.z <= 0) {
-        s.x = (Math.random() - 0.5) * width  * 2;
-        s.y = (Math.random() - 0.5) * height * 2;
-        s.z = MAXDEPTH;
+    const scroll = window.scrollY || 0;
+
+    /* csillagpor */
+    ctx.fillStyle = 'rgb(' + COL.star + ')';
+    for (const d of dust) {
+      const y = ((d.y - scroll * d.depth * 0.18) % height + height) % height;
+      let op = 0.12 + d.depth * 0.3;
+      if (animate) op *= 0.65 + 0.35 * Math.sin(tick * d.ps + d.phase);
+      ctx.globalAlpha = op;
+      ctx.beginPath(); ctx.arc(d.x, y, d.size, 0, Math.PI * 2); ctx.fill();
+    }
+
+    /* logó-motívumok */
+    for (const m of motifs) {
+      if (animate) {
+        m.y += m.vy * m.depth; m.x += m.vx;
+        m.rot += m.rs;
+        if (m.y < -50) { m.y = height + 50; m.x = Math.random() * width; }
+        if (m.x < -50) m.x = width + 50;
+        if (m.x > width + 50) m.x = -50;
       }
-      drawStar(s, true);
+      const y = m.y - scroll * m.depth * 0.1;       // finom parallax
+      const yy = ((y % (height + 100)) + height + 100) % (height + 100) - 50;
+      let op = (0.05 + m.depth * 0.13) * COL.alpha;
+      if (animate) op *= 0.7 + 0.3 * Math.sin(tick * m.ps + m.phase);
+      const col = motifColor(m.ci);
+      ctx.save();
+      ctx.translate(m.x, yy);
+      ctx.rotate(m.rot);
+      ctx.globalAlpha = op;
+      ctx.strokeStyle = col; ctx.fillStyle = col;
+      ctx.lineWidth = 1.1;
+      DRAW[m.type]({ size: m.size * m.depth + 6 });
+      ctx.restore();
     }
     ctx.globalAlpha = 1;
+  }
+
+  function frame(t) {
     raf = requestAnimationFrame(frame);
+    if (t - last < FRAME_MS) return;                // FPS-korlát
+    last = t;
+    tick++;
+    draw(true);
   }
 
   function start() { if (!raf && !reduce) raf = requestAnimationFrame(frame); }
@@ -1196,9 +1632,7 @@
   seed();
 
   if (reduce) {
-    // mozgás nélkül: egyszer kirajzoljuk a csillagokat
-    for (const s of stars) drawStar(s, false);
-    ctx.globalAlpha = 1;
+    draw(false);          // mozgás nélkül: statikus kompozíció
   } else {
     start();
   }
@@ -1206,18 +1640,16 @@
   let rt;
   window.addEventListener('resize', () => {
     clearTimeout(rt);
-    rt = setTimeout(() => { resize(); seed(); }, 200);
+    rt = setTimeout(() => { resize(); seed(); if (reduce) draw(false); }, 200);
   });
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) stop(); else start();
   });
 
-  /* téma váltáskor új paletta + tiszta lap */
+  /* téma váltáskor új paletta */
   window.addEventListener('themechange', () => {
     COL = readColors();
-    ctx.fillStyle = COL.bg;
-    ctx.fillRect(0, 0, width, height);
-    if (reduce) { for (const s of stars) drawStar(s, false); ctx.globalAlpha = 1; }
+    if (reduce) draw(false);
   });
 })();
 </script>
@@ -1232,7 +1664,7 @@
 
   function apply(theme) {
     root.setAttribute('data-theme', theme);
-    if (meta) meta.setAttribute('content', theme === 'light' ? '#f4f0e8' : '#0a0a0f');
+    if (meta) meta.setAttribute('content', theme === 'light' ? '#f7f0e1' : '#0a0a0f');
     window.dispatchEvent(new CustomEvent('themechange', { detail: theme }));
   }
   function systemTheme() { return mq.matches ? 'light' : 'dark'; }
@@ -1254,15 +1686,13 @@
 })();
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/hu.js"></script>
 <script>
 
-/* ── Date picker (nyári szezon: júl 10 – szept 30) ── */
-(function () {
+/* ── Flatpickr lazy betöltés (csak ha a foglalás közelébe érsz) ── */
+function initDatePicker() {
   const now  = new Date();
   const yr   = now.getFullYear();
-  const end  = new Date(yr, 8, 30);   // szept 30 idén
+  const end  = new Date(yr, 8, 30);      // szept 30 idén
   const tYr  = now > end ? yr + 1 : yr;  // ha idén lejárt, jövő évi szezon
   flatpickr('#date', {
     locale: 'hu',
@@ -1271,6 +1701,34 @@
     dateFormat: 'Y. m. d.',
     disableMobile: false,
   });
+}
+(function lazyFlatpickr() {
+  let loaded = false;
+  function load() {
+    if (loaded) return; loaded = true;
+    const css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css';
+    document.head.appendChild(css);
+    const s1 = document.createElement('script');
+    s1.src = 'https://cdn.jsdelivr.net/npm/flatpickr';
+    s1.onload = () => {
+      const s2 = document.createElement('script');
+      s2.src = 'https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/hu.js';
+      s2.onload = initDatePicker;
+      document.head.appendChild(s2);
+    };
+    document.head.appendChild(s1);
+  }
+  const sec = document.getElementById('booking');
+  if ('IntersectionObserver' in window && sec) {
+    const o = new IntersectionObserver(es => {
+      if (es.some(e => e.isIntersecting)) { load(); o.disconnect(); }
+    }, { rootMargin: '800px' });
+    o.observe(sec);
+  } else load();
+  const di = document.getElementById('date');
+  if (di) di.addEventListener('focus', load, { once: true });
 })();
 
 /* ── Navbar scroll ───────────────────────────────── */
@@ -1329,20 +1787,47 @@ document.querySelectorAll('.ftab').forEach(tab => {
 const initTab = document.querySelector('.ftab.active') || document.querySelector('.ftab');
 if (initTab) applyFilter(initTab.dataset.f);
 
-/* ── Lightbox ────────────────────────────────────── */
+/* ── Lightbox (lista-alapú: galéria VAGY album vetítése) ── */
 let lbIdx = 0;
+let lbList = [];
 
 function visItems() {
   return [...document.querySelectorAll('.gal-item:not(.hidden)')];
+}
+function itemSrc(item) {
+  return item.dataset.full || item.querySelector('img').src;
+}
+function lbPreload() {
+  [-1, 1].forEach(d => {
+    const i = (lbIdx + d + lbList.length) % lbList.length;
+    new Image().src = lbList[i];            // szomszédok elő-betöltése
+  });
+}
+function lbShow() {
+  document.getElementById('lb-img').src = lbList[lbIdx];
+  document.getElementById('lbCount').textContent = (lbIdx + 1) + ' / ' + lbList.length;
+  lbPreload();
+}
+function lbOpen(urls, idx) {
+  lbList = urls;
+  lbIdx = Math.max(0, idx || 0);
+  lbShow();
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
 
 document.querySelectorAll('.gal-item').forEach(item => {
   item.addEventListener('click', () => {
     const list = visItems();
-    lbIdx = list.indexOf(item);
-    document.getElementById('lb-img').src = item.dataset.full || item.querySelector('img').src;
-    document.getElementById('lightbox').classList.add('open');
-    document.body.style.overflow = 'hidden';
+    lbOpen(list.map(itemSrc), list.indexOf(item));
+  });
+});
+
+/* album-kártya → a sorozat vetítése */
+document.querySelectorAll('.alb-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const a = (typeof ALBUMS !== 'undefined') && ALBUMS.find(x => x.key === card.dataset.album);
+    if (a) lbOpen(a.ids.map(fullUrl), 0);
   });
 });
 
@@ -1352,14 +1837,28 @@ function lbClose() {
 }
 
 function lbNav(dir) {
-  const list = visItems();
-  lbIdx = (lbIdx + dir + list.length) % list.length;
-  document.getElementById('lb-img').src = list[lbIdx].dataset.full || list[lbIdx].querySelector('img').src;
+  lbIdx = (lbIdx + dir + lbList.length) % lbList.length;
+  lbShow();
 }
 
 document.getElementById('lightbox').addEventListener('click', e => {
   if (e.target === e.currentTarget) lbClose();
 });
+
+/* swipe lapozás mobilon + lehúzással bezárás */
+(function () {
+  const lb = document.getElementById('lightbox');
+  let sx = 0, sy = 0;
+  lb.addEventListener('touchstart', e => {
+    sx = e.touches[0].clientX; sy = e.touches[0].clientY;
+  }, { passive: true });
+  lb.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - sx;
+    const dy = e.changedTouches[0].clientY - sy;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) lbNav(dx < 0 ? 1 : -1);
+    else if (dy > 80 && Math.abs(dy) > Math.abs(dx) * 1.5) lbClose();
+  }, { passive: true });
+})();
 
 document.addEventListener('keydown', e => {
   const lb = document.getElementById('lightbox');
@@ -1383,8 +1882,15 @@ const form = document.getElementById('bookingForm');
 form.addEventListener('submit', async e => {
   e.preventDefault();
   const btn = form.querySelector('.btn-submit');
-  btn.textContent = 'Küldés...';
+  btn.textContent = 'Indítom a fecskét…';
+  btn.classList.add('sending');
   btn.disabled = true;
+
+  function fail() {
+    btn.textContent = 'Hát ez nem sikeredett — próbáljad ismét';
+    btn.classList.remove('sending');
+    btn.disabled = false;
+  }
 
   try {
     const res = await fetch(form.action, {
@@ -1396,12 +1902,10 @@ form.addEventListener('submit', async e => {
       form.style.display = 'none';
       document.getElementById('formSuccess').style.display = 'block';
     } else {
-      btn.textContent = 'Hiba – próbáld újra';
-      btn.disabled = false;
+      fail();
     }
   } catch {
-    btn.textContent = 'Hiba – próbáld újra';
-    btn.disabled = false;
+    fail();
   }
 });
 
