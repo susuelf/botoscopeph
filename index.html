@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Botoscope – Fotózás Erdélyben | Portré, Esemény, Táj</title>
+  <title>Botoscope – Botos Kristóf fotós | Sepsiszentgyörgy és környéke</title>
 
   <!-- ── SEO ── -->
   <meta name="description" content="Botoscope – Botos Kristóf fotós. Portré-, esemény- és tájfotózás természetes fénnyel, budget-barát áron. Foglalj időpontot a nyári szezonra!">
@@ -25,14 +25,29 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    "@type": ["LocalBusiness", "Photographer"],
     "@id": "https://susuelf.github.io/botoscopeph/",
     "name": "Botoscope",
-    "description": "Portré-, esemény- és tájfotózás természetes fénnyel.",
+    "description": "Botos Kristóf fotós – portré-, esemény- és tájfotózás természetes fénnyel Sepsiszentgyörgyön és környékén.",
     "url": "https://susuelf.github.io/botoscopeph/",
     "image": "https://res.cloudinary.com/dchgtjqbr/image/upload/q_auto,w_1200,f_jpg/taj-4_cpq5ta",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Sepsiszentgyörgy",
+      "addressRegion": "Kovászna megye",
+      "addressCountry": "RO"
+    },
+    "areaServed": {
+      "@type": "GeoCircle",
+      "geoMidpoint": {
+        "@type": "GeoCoordinates",
+        "latitude": 45.8685,
+        "longitude": 25.7882
+      },
+      "geoRadius": "100000"
+    },
     "founder": { "@type": "Person", "name": "Botos Kristóf" },
-    "knowsAbout": ["portréfotózás", "eseményfotózás", "tájfotózás"],
+    "knowsAbout": ["portréfotózás", "eseményfotózás", "tájfotózás", "esküvői fotózás"],
     "sameAs": [
       "https://www.instagram.com/botoscope/",
       "https://www.facebook.com/profile.php?id=61580925136185"
@@ -369,7 +384,7 @@
       animation:fadeDown .9s .5s ease both;
     }
     .hero-scroll {
-      position:absolute; bottom:30px; left:50%; transform:translateX(-50%);
+      position:absolute; bottom:30px; left:0; right:0;
       display:flex; flex-direction:column; align-items:center; gap:8px;
       font-size:.65rem; letter-spacing:.18em; text-transform:uppercase; color:var(--cream-d);
       animation:fadeDown .9s .9s ease both;
@@ -1980,3 +1995,4 @@ form.addEventListener('submit', async e => {
 </script>
 </body>
 </html>
+                     
